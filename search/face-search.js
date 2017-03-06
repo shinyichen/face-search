@@ -1,26 +1,29 @@
 (function() {
 
-    angular.module('facesearch', ['ui.bootstrap', 'ngUpload'])
+    angular.module('facesearch', ['ui.bootstrap', 'ngFileUpload'])
         .constant("searchURL", "http://localhost:8000/search")
 
-        .controller('faceSearchController', ['$scope', '$rootScope', '$http', 'searchURL', function($scope, $rootScope, $http, searchURL) {
+        .controller('faceSearchController', ['$scope', '$http', 'searchURL', 'Upload', function($scope, $http, searchURL, Upload) {
 
             $scope.isUploading = false;
 
             $scope.formModel = {
-                "title": ""
+                "title": null,
+                "file": null
             };
-
-            $scope.message = "";
 
             $scope.upload = function() {
                 $scope.isUploading = true;
-                $http.post(searchURL, $scope.formModel).then(function(response) {
-                    $scope.message = response.data;
+                Upload.upload({
+                    url: searchURL,
+                    data: {"title": $scope.formModel.title, "file": $scope.formModel.file}
+                }).then(function(response) {
                     $scope.isUploading  = false;
+                    console.log(response.data);
                 }, function(error) {
                     console.log(error);
                 });
+
             };
 
         }])
