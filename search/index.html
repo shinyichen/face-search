@@ -12,6 +12,7 @@
     <script src="../scripts/ng-file-upload.min.js"></script> <!-- file uploader -->
     <script src="d3.js"></script>
     <script src="plot.js"></script>
+    <script src="thumbnail.js"></script>
     <script src="face-search.js"></script>
 </head>
 <body class="fill-height">
@@ -21,7 +22,7 @@
     <!-- Input Area -->
     <div class="row fill-height">
 
-        <!-- Image uploader -->
+        <!-- Left Panel -->
         <div class="col-lg-3 fill-height" style="display: flex; flex-direction: column; padding-top: 10px; padding-bottom: 10px">
 
             <!-- logo -->
@@ -50,15 +51,36 @@
                     <button class="btn btn-primary btn-xs" ng-click="addImage()">Add</button>
                 </div>
             </div>
-        </div> <!-- end of image uploader -->
+        </div> <!-- end of left panel -->
 
-        <!-- uploaded image list -->
-        <div class="col-lg-9">
-            <div ng-repeat="(path, box) in images" style="position:relative;display: inline-block;">
-                <img class="thumbnail" ng-src="{{path}}" alt="" />
-                <button class="btn thumbnail-close" ng-click="removeImage(path)">x</button>
-            </div>
-        </div> <!-- end of uploaded image list -->
+        <!-- Right panel -->
+        <div class="col-lg-9 fill-height">
+
+            <!-- image list -->
+            <div class="images-panel">
+                <div ng-repeat="(path, box) in images" style="position:relative;display: inline-block;">
+                    <!--<img class="thumbnail" ng-src="{{path}}" alt="" />-->
+                    <thumbnail class="thumbnail"
+                               img-src="{{path}}"
+                               box-x="box.x"
+                               box-y="box.y"
+                               box-width="box.width"
+                               box-height="box.height"
+                               box=true
+                               display-height="200"
+                                display-width="200">
+                    </thumbnail>
+                    <button class="btn thumbnail-close" ng-click="removeImage(path)">x</button>
+                </div>
+            </div> <!-- end of image list -->
+
+            <button class="btn btn-primary">Search</button>
+
+            <!-- result -->
+            <div id="result-table">
+            </div> <!-- end of result -->
+
+        </div> <!-- end of right panel -->
     </div> <!-- end of input area -->
 </div> <!-- end of controller -->
 

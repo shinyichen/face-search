@@ -1,9 +1,10 @@
 (function() {
 
-    angular.module('facesearch', ['ui.bootstrap', 'ngFileUpload', 'plotModule'])
+    angular.module('facesearch', ['ui.bootstrap', 'ngFileUpload', 'plotModule', 'facesearch.thumbnail'])
         .constant("searchURL", "http://localhost:8000/search")
 
-        .controller('faceSearchController', ['$scope', '$http', 'searchURL', 'Upload', function($scope, $http, searchURL, Upload) {
+        .controller('faceSearchController', ['$scope', '$http', 'searchURL', 'Upload',
+            function($scope, $http, searchURL, Upload) {
 
             $scope.images = {};
 
@@ -60,6 +61,12 @@
 
             $scope.removeImage = function(path) {
                 delete $scope.images[path];
+            };
+
+            $scope.search = function() {
+                // generate a csv file of the list of images
+
+                // call search service
             }
 
         }])

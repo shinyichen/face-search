@@ -2,6 +2,7 @@
     width: auto;
     height: 200px;
     overflow: auto;
+    margin:2px;
 }
 
 .thumbnail-close {
@@ -16,6 +17,16 @@
     border-radius: 10px;
     padding:20px;
     background: #FFCC00;
+}
+
+.images-panel {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    overflow: scroll;
+    border: 5px dashed lightgray;
+    border-radius: 5px;
+    padding:20px;
+    height: 40%;
 }
 
 .fill-height {
