@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="facesearch">
+<html lang="en" ng-app="facesearch" class="fill-height">
 <head>
     <meta charset="UTF-8">
     <title>Face Search</title>
@@ -14,39 +14,46 @@
     <script src="plot.js"></script>
     <script src="face-search.js"></script>
 </head>
-<body>
+<body class="fill-height">
 
-<div ng-controller="faceSearchController" class="container-fluid">
+<div ng-controller="faceSearchController" class="container-fluid fill-height">
 
     <!-- Input Area -->
-    <div class="row">
-        <!-- Image uploader -->
-        <div class="col-lg-6">
-            <form>
-                <p>
-                    <label>Upload an image:</label>
-                    <input type="file" ngf-select ng-model="formModel.file" name="file"
-                           accept="image/*" ngf-max-size="19MB" required>
-                </p>
-                <p>
-                    <label>Or provide image URL:</label>
-                    <input type="text" ng-model="formModel.imageURL"/>
-                </p>
-                <p>
-                    <button class="btn btn-primary btn-xs" ng-disabled="isUploading" ng-click="upload()">Upload</button>
-                </p>
-            </form>
+    <div class="row fill-height">
 
-            <div ng-if="currentImagePath" ng-repeat="path in [currentImagePath]">
-                <p>Draw bounding box:</p>
-                <plot image-path="path" plot-api="plotAPI"></plot>
-                <button class="btn btn-primary btn-xs" ng-click="resetImage()">Reset</button>
-                <button class="btn btn-primary btn-xs" ng-click="addImage()">Add</button>
+        <!-- Image uploader -->
+        <div class="col-lg-3 fill-height" style="display: flex; flex-direction: column; padding-top: 10px; padding-bottom: 10px">
+
+            <!-- logo -->
+            <img src="logo.png" style="max-width: 100%; padding-bottom: 10px">
+
+            <div class="rounded-panel" style="flex-grow: 1">
+                <form>
+                    <p>
+                        <label>Upload an image:</label>
+                        <input type="file" ngf-select ng-model="formModel.file" name="file"
+                               accept="image/*" ngf-max-size="19MB" required>
+                    </p>
+                    <p>
+                        <label>Or provide image URL:</label>
+                        <input type="text" ng-model="formModel.imageURL"/>
+                    </p>
+                    <p>
+                        <button class="btn btn-primary btn-xs" ng-disabled="isUploading" ng-click="upload()">Upload</button>
+                    </p>
+                </form>
+
+                <div ng-if="currentImagePath" ng-repeat="path in [currentImagePath]" style="flex-grow: 1">
+                    <p>Draw bounding box:</p>
+                    <plot image-path="path" plot-api="plotAPI"></plot>
+                    <button class="btn btn-primary btn-xs" ng-click="resetImage()">Reset</button>
+                    <button class="btn btn-primary btn-xs" ng-click="addImage()">Add</button>
+                </div>
             </div>
         </div> <!-- end of image uploader -->
 
         <!-- uploaded image list -->
-        <div class="col-lg-6">
+        <div class="col-lg-9">
             <div ng-repeat="(path, box) in images" style="position:relative;display: inline-block;">
                 <img class="thumbnail" ng-src="{{path}}" alt="" />
                 <button class="btn thumbnail-close" ng-click="removeImage(path)">x</button>
