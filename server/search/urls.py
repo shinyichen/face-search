@@ -3,5 +3,6 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.search, name='search'),
+    url(r'^upload$', views.search, name='upload'),
+    url(r'^hello$', views.hello, name='hello'),
 ]

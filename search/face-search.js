@@ -1,9 +1,12 @@
 (function() {
 
     angular.module('facesearch', ['ui.bootstrap', 'ngFileUpload', 'plotModule'])
-        .constant("searchURL", "http://localhost:8000/search")
+        .constant("URL", {
+            upload: "http://localhost:8000/search/upload",
+            search: "http://localhost:8000/search/hello"
+        })
 
-        .controller('faceSearchController', ['$scope', '$http', 'searchURL', 'Upload', function($scope, $http, searchURL, Upload) {
+        .controller('faceSearchController', ['$scope', '$http', 'URL', 'Upload', function($scope, $http, URL, Upload) {
 
             $scope.images = {};
 
@@ -19,7 +22,7 @@
             $scope.upload = function() {
                 $scope.isUploading = true;
                 Upload.upload({
-                    url: searchURL,
+                    url: URL.upload,
                     data: {"file": $scope.formModel.file}
                 }).then(function(response) {
                     $scope.isUploading  = false;
@@ -60,7 +63,15 @@
 
             $scope.removeImage = function(path) {
                 delete $scope.images[path];
-            }
+            };
+
+            $scope.search = function() {
+                $http.get(URL.search).then(function(response) {
+                    console.log(response.data);
+                }, function(error) {
+                    console.log(error);
+                })
+            };
 
         }])
 
