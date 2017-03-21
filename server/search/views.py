@@ -14,6 +14,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, parser_classes
 
+#clib
+import hello as h
+
 @api_view(['POST'])
 @parser_classes((FormParser, MultiPartParser))
 def search(request):
@@ -33,3 +36,9 @@ def search(request):
 
         my_saved_file = open(filename)
         return Response(str(t))
+
+@api_view(['GET'])
+def hello(request):
+    if request.method == 'GET':
+        msg = h.greet()
+        return HttpResponse(msg)

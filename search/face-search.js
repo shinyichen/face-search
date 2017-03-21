@@ -1,10 +1,13 @@
 (function() {
 
-    angular.module('facesearch', ['ui.bootstrap', 'ngFileUpload', 'plotModule', 'facesearch.thumbnail'])
-        .constant("searchURL", "http://localhost:8000/search")
 
-        .controller('faceSearchController', ['$scope', '$http', 'searchURL', 'Upload',
-            function($scope, $http, searchURL, Upload) {
+    angular.module('facesearch', ['ui.bootstrap', 'ngFileUpload', 'plotModule', 'facesearch.thumbnail'])
+        .constant("URL", {
+            upload: "http://localhost:8000/search/upload",
+            search: "http://localhost:8000/search/hello"
+        })
+
+        .controller('faceSearchController', ['$scope', '$http', 'URL', 'Upload', function($scope, $http, URL, Upload) {
 
             $scope.images = {};
 
@@ -20,7 +23,7 @@
             $scope.upload = function() {
                 $scope.isUploading = true;
                 Upload.upload({
-                    url: searchURL,
+                    url: URL.upload,
                     data: {"file": $scope.formModel.file}
                 }).then(function(response) {
                     $scope.isUploading  = false;
@@ -64,10 +67,12 @@
             };
 
             $scope.search = function() {
-                // generate a csv file of the list of images
-
-                // call search service
-            }
+                $http.get(URL.search).then(function(response) {
+                    console.log(response.data);
+                }, function(error) {
+                    console.log(error);
+                })
+            };
 
         }])
 
