@@ -19,10 +19,8 @@ import hello as h
 
 @api_view(['POST'])
 @parser_classes((FormParser, MultiPartParser))
-def search(request):
-    if request.method == 'GET':
-        return HttpResponse("Hello from search")
-    elif request.method == 'POST':
+def upload(request):
+    if request.method == 'POST':
         parser_classes = (MultiPartParser, FormParser,)
         title = request.data.get('title')
         image = request.FILES['file']
