@@ -74,22 +74,13 @@
                 </div>
             </div> <!-- end of image list -->
 
-            <button class="btn btn-primary">Search</button>
+            <button class="btn btn-primary" ng-click="search()">Search</button>
 
             <!-- result -->
             <div id="result-table">
             </div> <!-- end of result -->
 
         </div> <!-- end of right panel -->
-        <!--&lt;!&ndash; uploaded image list &ndash;&gt;-->
-        <!--<div class="col-lg-9">-->
-            <!--<div ng-repeat="(path, box) in images" style="position:relative;display: inline-block;">-->
-                <!--<img class="thumbnail" ng-src="{{path}}" alt="" />-->
-                <!--<button class="btn thumbnail-close" ng-click="removeImage(path)">x</button>-->
-            <!--</div>-->
-        <!--</div> &lt;!&ndash; end of uploaded image list &ndash;&gt;-->
-
-        <!--<button class="btn" ng-click="search()">Search</button>-->
     </div> <!-- end of input area -->
 </div> <!-- end of controller -->
 

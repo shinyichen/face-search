@@ -4,7 +4,7 @@
     angular.module('facesearch', ['ui.bootstrap', 'ngFileUpload', 'plotModule', 'facesearch.thumbnail'])
         .constant("URL", {
             upload: "http://localhost:8000/search/upload",
-            search: "http://localhost:8000/search/hello"
+            search: "http://localhost:8000/search/search"
         })
 
         .controller('faceSearchController', ['$scope', '$http', 'URL', 'Upload', function($scope, $http, URL, Upload) {
@@ -50,10 +50,10 @@
                     var w=  $scope.plotAPI.getFaceWidth();
                     var h=  $scope.plotAPI.getFaceHeight();
                     $scope.images[$scope.currentImagePath] = {
-                        "x": x,
-                        "y": y,
-                        "width": w,
-                        "height": h
+                        "face_x": x,
+                        "face_y": y,
+                        "face_width": w,
+                        "face_height": h
                     };
                     $scope.currentImagePath = null;
                     console.log(x + ", " + y + ", " + w + ", " + h);
@@ -67,7 +67,7 @@
             };
 
             $scope.search = function() {
-                $http.get(URL.search).then(function(response) {
+                $http.post(URL.search, $scope.images).then(function(response) {
                     console.log(response.data);
                 }, function(error) {
                     console.log(error);

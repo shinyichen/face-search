@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns = [
     url(r'^upload$', views.upload, name='upload'),
+    url(r'^search$', views.search, name='search'),
     url(r'^hello$', views.hello, name='hello'),
 ]
