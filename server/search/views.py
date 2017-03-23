@@ -5,6 +5,18 @@ import time
 import requests
 import urllib2
 
+# temporary, for uploading images to my isi home directory so c server can access them
+# don't need these for deployment
+# --------------------
+import base64
+import getpass
+import os
+import socket
+import sys
+import traceback
+import paramiko
+#-------------------
+
 #Django Core
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -40,19 +52,54 @@ def upload(request):
         image = request.FILES['file']
         t = time.time()
         fileDir = os.path.abspath(__file__ + "/../../../images/")
-        filepath = os.path.join(fileDir, str(t))
+        filename = str(t)
+        filepath = os.path.join(fileDir, filename)
         with open(filepath, 'wb+') as temp_file:
             for chunk in image.chunks():
                 temp_file.write(chunk)
 
         my_saved_file = open(filepath)
         print("uploaded to " + filepath)
-        return Response(str(t))
+
+        # temporary, for ftp images to my isi home directory for c server to access
+        # don't need this for deployment
+        # ---------------------------------------
+        hostname = "isicvl03"
+        port = 22
+        username = "jchen"
+
+        try:
+            privatekeyfile = '/Users/jenniferchen/.ssh/id_rsa'
+            mykey = paramiko.RSAKey.from_private_key_file(privatekeyfile)
+            transport = paramiko.Transport((hostname, port))
+            transport.connect(username = username, pkey = mykey)
+            sftp = paramiko.SFTPClient.from_transport(transport)
+
+            dirlist = sftp.listdir('.')
+            sftp.put(filepath, 'test/' + filename)
+
+            transport.close()
+
+        except Exception as e:
+            print('*** Caught exception: %s: %s' % (e.__class__, e))
+            traceback.print_exc()
+            try:
+                t.close()
+            except:
+                pass
+        #-------------------------------------
+
+        return Response(filename)
 
 @api_view(['POST'])
 @parser_classes((JSONParser,))
 def search(request):
-    uploadDir = os.path.abspath(__file__ + "/../../../images/")
+    # uploadDir = os.path.abspath(__file__ + "/../../../images/")
+    # TODO temporary uploadDir, change to the above at deployment
+    # -----------------------------------
+    uploadDir = "/nfs/div2/jchen/test"
+    # -----------------------------------
+
     parser_classes = (JSONParser,)
     data = request.data
     filenames = data.keys()
