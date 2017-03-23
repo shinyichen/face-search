@@ -2,6 +2,8 @@
 import os
 import json
 import time
+import requests
+import urllib2
 
 #Django Core
 from django.http import HttpResponse
@@ -20,13 +22,13 @@ import hello as h
 @api_view(['GET'])
 def initialize(request):
     print("initialize...")
-    res = urllib2.urlopen("http://localhost:18080/initialize").read()
+    res = urllib2.urlopen("http://isicvl04:8080/initialize").read()
     return HttpResponse(res)
 
 @api_view(['GET'])
-def initialize(request):
+def finalize(request):
     print("finalize...")
-    res = urllib2.urlopen("http://localhost:18080/finalize").read()
+    res = urllib2.urlopen("http://isicvl04:8080/finalize").read()
     return HttpResponse(res)
 
 @api_view(['POST'])
@@ -66,9 +68,9 @@ def search(request):
 
     # search
     print("Searching ...")
-    r = requests.post("http://localhost:18080/search", json=payload)
-
-    return Response("Searching " + str(len(image_paths)) + " images")
+    r = requests.post("http://isicvl04:8080/search", json=payload)
+    result = r.json
+    return Response(r.text)
 
 @api_view(['GET'])
 def hello(request):

@@ -4,7 +4,9 @@
     angular.module('facesearch', ['ui.bootstrap', 'ngFileUpload', 'plotModule', 'facesearch.thumbnail'])
         .constant("URL", {
             upload: "http://localhost:8000/search/upload",
-            search: "http://localhost:8000/search/search"
+            initialize: "http://localhost:8000/search/initialize",
+            search: "http://localhost:8000/search/search",
+            finalize: "http://localhost:8000/search/finalize"
         })
 
         .constant("ImageDir", "../images")
@@ -70,13 +72,34 @@
                 delete $scope.images[path];
             };
 
-            $scope.search = function() {
-                $http.post(URL.search, $scope.images).then(function(response) {
+            $scope.initialize = function() {
+                $http.get(URL.initialize).then(function(response) {
                     console.log(response.data);
                 }, function(error) {
                     console.log(error);
                 })
             };
+
+            $scope.search = function() {
+                $http.post(URL.search, $scope.images).then(function(response) {
+                    console.log(response.data);
+                    //for (var i = 0; i < data.length; i++) {
+                    //    var d = data[i];
+                    //    var tid = d["template_id"];
+                    //    var sim = d["similarity"];
+                    //}
+                }, function(error) {
+                    console.log(error);
+                })
+            };
+
+            $scope.finalize = function() {
+                $http.get(URL.finalize).then(function(response) {
+                    console.log(response.data);
+                }, function(error) {
+                    console.log(error);
+                })
+            }
 
         }])
 
