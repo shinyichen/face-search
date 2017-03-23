@@ -5,7 +5,7 @@
             return {
                 restrict: 'E',
                 scope: {
-                    imagePath: "=",
+                    imagePath: "@",
                     plotApi: "="
                 },
                 link: function(scope, element, attrs) {

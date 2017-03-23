@@ -7,11 +7,15 @@
             search: "http://localhost:8000/search/search"
         })
 
+        .constant("ImageDir", "../images")
+
         .controller('faceSearchController', ['$scope', '$http', 'URL', 'Upload', function($scope, $http, URL, Upload) {
+
+            $scope.imageDir = "../images/";
 
             $scope.images = {};
 
-            $scope.currentImagePath = null;
+            $scope.imageFilename = null;
 
             $scope.isUploading = false;
 
@@ -29,7 +33,7 @@
                     $scope.isUploading  = false;
                     console.log(response.data);
 
-                    $scope.currentImagePath = "../images/" + response.data;
+                    $scope.imageFilename = response.data;
 
                 }, function(error) {
                     console.log(error);
@@ -49,13 +53,13 @@
                     var y=  $scope.plotAPI.getFaceY();
                     var w=  $scope.plotAPI.getFaceWidth();
                     var h=  $scope.plotAPI.getFaceHeight();
-                    $scope.images[$scope.currentImagePath] = {
+                    $scope.images[$scope.imageFilename] = {
                         "face_x": x,
                         "face_y": y,
                         "face_width": w,
                         "face_height": h
                     };
-                    $scope.currentImagePath = null;
+                    $scope.imageFilename = null;
                     console.log(x + ", " + y + ", " + w + ", " + h);
                 } else {
 

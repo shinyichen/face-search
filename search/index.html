@@ -44,9 +44,9 @@
                     </p>
                 </form>
 
-                <div ng-if="currentImagePath" ng-repeat="path in [currentImagePath]" style="flex-grow: 1">
+                <div ng-if="imageFilename" ng-repeat="path in [imageFilename]" style="flex-grow: 1">
                     <p>Draw bounding box:</p>
-                    <plot image-path="path" plot-api="plotAPI"></plot>
+                    <plot image-path="{{imageDir}}/{{path}}" plot-api="plotAPI"></plot>
                     <button class="btn btn-primary btn-xs" ng-click="resetImage()">Reset</button>
                     <button class="btn btn-primary btn-xs" ng-click="addImage()">Add</button>
                 </div>
@@ -61,11 +61,11 @@
                 <div ng-repeat="(path, box) in images" style="position:relative;display: inline-block;">
                     <!--<img class="thumbnail" ng-src="{{path}}" alt="" />-->
                     <thumbnail class="thumbnail"
-                               img-src="{{path}}"
-                               box-x="box.x"
-                               box-y="box.y"
-                               box-width="box.width"
-                               box-height="box.height"
+                               img-src="{{imageDir}}/{{path}}"
+                               box-x="box.face_x"
+                               box-y="box.face_y"
+                               box-width="box.face_width"
+                               box-height="box.face_height"
                                box=true
                                display-height="200"
                                 display-width="200">

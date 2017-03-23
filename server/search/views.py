@@ -20,13 +20,13 @@ import hello as h
 @api_view(['GET'])
 def initialize(request):
     print("initialize...")
-    # res = urllib2.urlopen("http://localhost:18080/initialize").read()
+    res = urllib2.urlopen("http://localhost:18080/initialize").read()
     return HttpResponse(res)
 
 @api_view(['GET'])
 def initialize(request):
     print("finalize...")
-    # res = urllib2.urlopen("http://localhost:18080/finalize").read()
+    res = urllib2.urlopen("http://localhost:18080/finalize").read()
     return HttpResponse(res)
 
 @api_view(['POST'])
@@ -38,32 +38,35 @@ def upload(request):
         image = request.FILES['file']
         t = time.time()
         fileDir = os.path.abspath(__file__ + "/../../../images/")
-        print(fileDir)
-        filename = os.path.join(fileDir, str(t))
-        with open(filename, 'wb+') as temp_file:
+        filepath = os.path.join(fileDir, str(t))
+        with open(filepath, 'wb+') as temp_file:
             for chunk in image.chunks():
                 temp_file.write(chunk)
 
-        my_saved_file = open(filename)
+        my_saved_file = open(filepath)
+        print("uploaded to " + filepath)
         return Response(str(t))
 
 @api_view(['POST'])
 @parser_classes((JSONParser,))
 def search(request):
+    uploadDir = os.path.abspath(__file__ + "/../../../images/")
     parser_classes = (JSONParser,)
     data = request.data
-    image_paths = data.keys()
-    for image_path in image_paths:
-        print(image_path)
-        face_x = data[image_path]['face_x']
-        face_y = data[image_path]['face_y']
-        face_width = data[image_path]['face_width']
-        face_height = data[image_path]['face_height']
+    filenames = data.keys()
+    payload = []
+    for filename in filenames:
+        face_x = data[filename]['face_x']
+        face_y = data[filename]['face_y']
+        face_width = data[filename]['face_width']
+        face_height = data[filename]['face_height']
+        image_path = os.path.join(uploadDir, filename)
+        print("search got " + image_path)
+        payload.append({'image_path':image_path, 'face_x': face_x, 'face_y': face_y, 'face_width': face_width, 'face_height': face_height})
 
-        # searching
-        print("create template...")
-        payload = [{'image_path':'example.jpeg', 'face_x': 12, 'face_y': 23, 'face_width': 34, 'face_height': 45}]
-        r = requests.post("http://localhost:18080/create-template", json=payload)
+    # search
+    print("Searching ...")
+    r = requests.post("http://localhost:18080/search", json=payload)
 
     return Response("Searching " + str(len(image_paths)) + " images")
 
