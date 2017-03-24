@@ -27,7 +27,7 @@
                 "file": null
             };
 
-            $scope.result = {};
+            $scope.result = null;
 
             $scope.upload = function() {
                 $scope.isUploading = true;
@@ -75,16 +75,7 @@
                 delete $scope.images[path];
             };
 
-            $scope.initialize = function() {
-                $http.get(URL.initialize).then(function(response) {
-                    console.log(response.data);
-                }, function(error) {
-                    console.log(error);
-                })
-            };
-
             $scope.search = function() {
-                $scope.result = {};
                 $http.post(URL.search, $scope.images).then(function(response) {
                     console.log(response.data);
                     $scope.result = response.data;
@@ -92,14 +83,6 @@
                     console.log(error);
                 })
             };
-
-            $scope.finalize = function() {
-                $http.get(URL.finalize).then(function(response) {
-                    console.log(response.data);
-                }, function(error) {
-                    console.log(error);
-                })
-            }
 
         }])
 

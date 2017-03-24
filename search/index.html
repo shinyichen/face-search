@@ -74,12 +74,10 @@
                 </div>
             </div> <!-- end of image list -->
 
-            <button class="btn btn-primary" ng-click="initialize()">Initialize</button>
             <button class="btn btn-primary" ng-click="search()">Search</button>
-            <button class="btn btn-primary" ng-click="finalize()">Finalize</button>
 
             <!-- result -->
-            <div id="result-table">
+            <div id="result-table" class="result-panel" ng-if="result">
                 <table class="table table-striped table-bordered table-hover">
                     <thead class="table-heading">
                     <tr>

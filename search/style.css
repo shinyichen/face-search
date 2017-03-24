@@ -29,6 +29,12 @@
     height: 40%;
 }
 
+.result-panel {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    overflow: scroll;
+}
+
 .fill-height {
     height: 100%;
 }
