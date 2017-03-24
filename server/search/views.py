@@ -19,6 +19,7 @@ import paramiko
 
 #Django Core
 from django.http import HttpResponse
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 
@@ -116,8 +117,7 @@ def search(request):
     # search
     print("Searching ...")
     r = requests.post("http://isicvl04:8080/search", json=payload)
-    result = r.json
-    return Response(r.text)
+    return JsonResponse(json.loads(r.text), safe=False)
 
 @api_view(['GET'])
 def hello(request):

@@ -9,11 +9,12 @@
             finalize: "http://localhost:8000/search/finalize"
         })
 
-        .constant("ImageDir", "../images")
+        .controller('faceSearchController', ['$scope', '$http', 'URL', 'Upload', '$q', '$rootScope', function($scope, $http, URL, Upload, $q, $rootScope) {
 
-        .controller('faceSearchController', ['$scope', '$http', 'URL', 'Upload', function($scope, $http, URL, Upload) {
+            $scope.uploadImageDir = "../images/";
 
-            $scope.imageDir = "../images/";
+            //$scope.galleryImageDir = "/lfs2/glaive/data/CS3_2.0/"; // TODO use this at deployment for linking gallery images
+            $scope.galleryImageDir = "http://isicvl03:8001/gallery/";
 
             $scope.images = {};
 
@@ -25,6 +26,8 @@
                 "title": null,
                 "file": null
             };
+
+            $scope.result = {};
 
             $scope.upload = function() {
                 $scope.isUploading = true;
@@ -81,13 +84,10 @@
             };
 
             $scope.search = function() {
+                $scope.result = {};
                 $http.post(URL.search, $scope.images).then(function(response) {
                     console.log(response.data);
-                    //for (var i = 0; i < data.length; i++) {
-                    //    var d = data[i];
-                    //    var tid = d["template_id"];
-                    //    var sim = d["similarity"];
-                    //}
+                    $scope.result = response.data;
                 }, function(error) {
                     console.log(error);
                 })
@@ -102,6 +102,57 @@
             }
 
         }])
+
+        .run(['$http', '$rootScope', function($http, $rootScope) {
+
+            var gallery_file = "gallery.csv";
+
+            // load gallery
+            $http.get(gallery_file).then(function(response) {
+                $rootScope.gallery = parseGallery(response.data);
+            }, function(error) {
+            });
+
+            /**
+             * returns {template_id: [ {template_id, subject_id, filename, .....}, ... ], ... }
+             * @param csv
+             */
+            function parseGallery(csv) {
+
+                var gallery = {};
+
+                var lines=csv.split("\n");
+                var headers=lines[0].split(",");
+                var id_col = -1;
+
+                headers.forEach(function(value, index, array) {
+                    var col = value.trim();
+                    array[index] = col;
+                    if (col === "TEMPLATE_ID")
+                        id_col = index;
+                });
+
+                for(var i = 1; i < lines.length; i++){ // skip header
+
+                    if (lines[i] === "")
+                        continue;
+
+                    var currentline = lines[i].split(",");
+                    var template_id = currentline[id_col].trim();
+                    if (!gallery[template_id])
+                        gallery[template_id] = [];
+
+                    var line = {};
+                    for (var j = 0; j < currentline.length; j++) {
+                        line[headers[j]] = currentline[j]; // keep as string
+                    }
+                    gallery[template_id].push(line);
+                }
+
+                return gallery;
+            }
+        }])
+
 
 
 })();

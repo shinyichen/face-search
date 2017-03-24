@@ -46,7 +46,7 @@
 
                 <div ng-if="imageFilename" ng-repeat="path in [imageFilename]" style="flex-grow: 1">
                     <p>Draw bounding box:</p>
-                    <plot image-path="{{imageDir}}/{{path}}" plot-api="plotAPI"></plot>
+                    <plot image-path="{{uploadImageDir}}/{{path}}" plot-api="plotAPI"></plot>
                     <button class="btn btn-primary btn-xs" ng-click="resetImage()">Reset</button>
                     <button class="btn btn-primary btn-xs" ng-click="addImage()">Add</button>
                 </div>
@@ -61,7 +61,7 @@
                 <div ng-repeat="(path, box) in images" style="position:relative;display: inline-block;">
                     <!--<img class="thumbnail" ng-src="{{path}}" alt="" />-->
                     <thumbnail class="thumbnail"
-                               img-src="{{imageDir}}/{{path}}"
+                               img-src="{{uploadImageDir}}/{{path}}"
                                box-x="box.face_x"
                                box-y="box.face_y"
                                box-width="box.face_width"
@@ -80,6 +80,36 @@
 
             <!-- result -->
             <div id="result-table">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead class="table-heading">
+                    <tr>
+                        <th style="width: 1px; white-space: nowrap; align-content: center">Template ID</th>
+                        <th style="width: 1px; white-space: nowrap">Similarity</th>
+                        <th>Images</th>
+                    </tr>
+                    </thead>
+
+                    <!-- rows -->
+                    <tbody>
+                    <tr class="table-row" ng-repeat="r in result track by $index">
+                        <td align="center">{{r.template_id}}</td>
+                        <td align="center">{{r.similarity}}</td>
+                        <td>
+                            <thumbnail ng-repeat="template in gallery[r.template_id] | limitTo: 5"
+                                       class="img-thumbnail"
+                                       img-src="{{galleryImageDir}}{{template.FILENAME}}"
+                                       box-x="template.FACE_X"
+                                       box-y="template.FACE_Y"
+                                       box-width="template.FACE_WIDTH"
+                                       box-height="template.FACE_HEIGHT"
+                                       display-width="100"
+                                       display-height="100"
+                                       crop=true
+                                       style="vertical-align: bottom; cursor: pointer"></thumbnail>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div> <!-- end of result -->
 
         </div> <!-- end of right panel -->
