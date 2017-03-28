@@ -4,6 +4,7 @@
     angular.module('facesearch', ['ui.bootstrap', 'ngFileUpload', 'plotModule', 'facesearch.thumbnail'])
         .constant("URL", {
             upload: "http://localhost:8000/search/upload",
+            uploadByLink: "http://localhost:8000/search/uploadByLink",
             initialize: "http://localhost:8000/search/initialize",
             search: "http://localhost:8000/search/search",
             finalize: "http://localhost:8000/search/finalize"
@@ -18,32 +19,54 @@
 
             $scope.images = {};
 
+            $scope.imageCount = 0;
+
             $scope.imageFilename = null;
 
             $scope.isUploading = false;
 
             $scope.formModel = {
                 "title": null,
-                "file": null
+                "file": null,
+                "imageURL": null
             };
 
             $scope.result = null;
 
             $scope.upload = function() {
-                $scope.isUploading = true;
-                Upload.upload({
-                    url: URL.upload,
-                    data: {"file": $scope.formModel.file}
-                }).then(function(response) {
-                    $scope.isUploading  = false;
-                    console.log(response.data);
+                if ($scope.formModel.file) {
 
-                    $scope.imageFilename = response.data;
+                    $scope.isUploading = true;
+                    Upload.upload({
+                        url: URL.upload,
+                        data: {"file": $scope.formModel.file}
+                    }).then(function (response) {
+                        $scope.isUploading = false;
+                        console.log(response.data);
 
-                }, function(error) {
-                    console.log(error);
-                });
+                        $scope.imageFilename = response.data;
+                        $scope.formModel.file = null;
 
+                    }, function (error) {
+                        console.log(error);
+                        $scope.formModel.file = null;
+                        $scope.isUploading = false;
+                    });
+                } else if ($scope.formModel.imageURL) {
+
+                    $scope.isUploading = true;
+                    $http.post(URL.uploadByLink, {"imageURL": $scope.formModel.imageURL}).then(function (response) {
+                        $scope.isUploading = false;
+                        console.log(response.data);
+
+                        $scope.imageFilename = response.data;
+                        $scope.formModel.imageURL = null;
+                    }, function (error) {
+                        console.log(error);
+                        $scope.formModel.imageURL = null;
+                        $scope.isUploading = false;
+                    });
+                }
             };
 
             $scope.plotAPI = {};
@@ -65,6 +88,7 @@
                         "face_height": h
                     };
                     $scope.imageFilename = null;
+                    $scope.imageCount += 1;
                     console.log(x + ", " + y + ", " + w + ", " + h);
                 } else {
 
@@ -73,6 +97,7 @@
 
             $scope.removeImage = function(path) {
                 delete $scope.images[path];
+                $scope.imageCount -= 1;
             };
 
             $scope.search = function() {

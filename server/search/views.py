@@ -49,7 +49,6 @@ def finalize(request):
 def upload(request):
     if request.method == 'POST':
         parser_classes = (MultiPartParser, FormParser,)
-        title = request.data.get('title')
         image = request.FILES['file']
         t = time.time()
         fileDir = os.path.abspath(__file__ + "/../../../images/")
@@ -60,6 +59,52 @@ def upload(request):
                 temp_file.write(chunk)
 
         my_saved_file = open(filepath)
+        print("uploaded to " + filepath)
+
+        # temporary, for ftp images to my isi home directory for c server to access
+        # don't need this for deployment
+        # ---------------------------------------
+        hostname = "isicvl03"
+        port = 22
+        username = "jchen"
+
+        try:
+            privatekeyfile = '/Users/jenniferchen/.ssh/id_rsa'
+            mykey = paramiko.RSAKey.from_private_key_file(privatekeyfile)
+            transport = paramiko.Transport((hostname, port))
+            transport.connect(username = username, pkey = mykey)
+            sftp = paramiko.SFTPClient.from_transport(transport)
+
+            dirlist = sftp.listdir('.')
+            sftp.put(filepath, 'test/' + filename)
+
+            transport.close()
+
+        except Exception as e:
+            print('*** Caught exception: %s: %s' % (e.__class__, e))
+            traceback.print_exc()
+            try:
+                t.close()
+            except:
+                pass
+        #-------------------------------------
+
+        return Response(filename)
+
+@api_view(['POST'])
+def uploadByLink(request):
+    if request.method == 'POST':
+        imageURL = request.data.get('imageURL')
+        t = time.time()
+        fileDir = os.path.abspath(__file__ + "/../../../images/")
+        filename = str(t)
+        filepath = os.path.join(fileDir, filename)
+
+        # save image from url
+        f = open(filepath,'wb')
+        f.write(urllib2.urlopen(imageURL).read())
+        f.close()
+
         print("uploaded to " + filepath)
 
         # temporary, for ftp images to my isi home directory for c server to access
