@@ -75,6 +75,10 @@
                 $scope.plotAPI.reset();
             };
 
+            $scope.cancelImage = function() {
+                $scope.imageFilename = null;
+            };
+
             $scope.addImage = function() {
                 if ($scope.plotAPI.isDrawn()) {
                     var x=  $scope.plotAPI.getFaceX();
