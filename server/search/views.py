@@ -49,7 +49,8 @@ def upload(request):
         parser_classes = (MultiPartParser, FormParser,)
         image = request.FILES['file']
         t = time.time()
-        fileDir = os.path.abspath(__file__ + "/../../../images/")
+        # fileDir = os.path.abspath(__file__ + "/../../../images/")
+        fileDir = os.path.abspath("/nfs/div2/jchen/face-search/uploads/")
         filename = str(t)
         filepath = os.path.join(fileDir, filename)
         with open(filepath, 'wb+') as temp_file:
@@ -62,29 +63,29 @@ def upload(request):
         # temporary, for ftp images to my isi home directory for c server to access
         # don't need this for deployment
         # ---------------------------------------
-        hostname = "isicvl03"
-        port = 22
-        username = "jchen"
-
-        try:
-            privatekeyfile = '/Users/jenniferchen/.ssh/id_rsa'
-            mykey = paramiko.RSAKey.from_private_key_file(privatekeyfile)
-            transport = paramiko.Transport((hostname, port))
-            transport.connect(username = username, pkey = mykey)
-            sftp = paramiko.SFTPClient.from_transport(transport)
-
-            dirlist = sftp.listdir('.')
-            sftp.put(filepath, 'test/uploads/' + filename)
-
-            transport.close()
-
-        except Exception as e:
-            print('*** Caught exception: %s: %s' % (e.__class__, e))
-            traceback.print_exc()
-            try:
-                t.close()
-            except:
-                pass
+        # hostname = "isicvl03"
+        # port = 22
+        # username = "jchen"
+        #
+        # try:
+        #     privatekeyfile = '/Users/jenniferchen/.ssh/id_rsa'
+        #     mykey = paramiko.RSAKey.from_private_key_file(privatekeyfile)
+        #     transport = paramiko.Transport((hostname, port))
+        #     transport.connect(username = username, pkey = mykey)
+        #     sftp = paramiko.SFTPClient.from_transport(transport)
+        #
+        #     dirlist = sftp.listdir('.')
+        #     sftp.put(filepath, 'test/uploads/' + filename)
+        #
+        #     transport.close()
+        #
+        # except Exception as e:
+        #     print('*** Caught exception: %s: %s' % (e.__class__, e))
+        #     traceback.print_exc()
+        #     try:
+        #         t.close()
+        #     except:
+        #         pass
         #-------------------------------------
 
         return Response(filename)
@@ -94,7 +95,8 @@ def uploadByLink(request):
     if request.method == 'POST':
         imageURL = request.data.get('imageURL')
         t = time.time()
-        fileDir = os.path.abspath(__file__ + "/../../../images/")
+        # fileDir = os.path.abspath(__file__ + "/../../../images/")
+        fileDir = os.path.abspath("/nfs/div2/jchen/face-search/uploads/")
         filename = str(t)
         filepath = os.path.join(fileDir, filename)
 
@@ -108,29 +110,29 @@ def uploadByLink(request):
         # temporary, for ftp images to my isi home directory for c server to access
         # don't need this for deployment
         # ---------------------------------------
-        hostname = "isicvl03"
-        port = 22
-        username = "jchen"
-
-        try:
-            privatekeyfile = '/Users/jenniferchen/.ssh/id_rsa'
-            mykey = paramiko.RSAKey.from_private_key_file(privatekeyfile)
-            transport = paramiko.Transport((hostname, port))
-            transport.connect(username = username, pkey = mykey)
-            sftp = paramiko.SFTPClient.from_transport(transport)
-
-            dirlist = sftp.listdir('.')
-            sftp.put(filepath, 'test/uploads/' + filename)
-
-            transport.close()
-
-        except Exception as e:
-            print('*** Caught exception: %s: %s' % (e.__class__, e))
-            traceback.print_exc()
-            try:
-                t.close()
-            except:
-                pass
+        # hostname = "isicvl03"
+        # port = 22
+        # username = "jchen"
+        #
+        # try:
+        #     privatekeyfile = '/Users/jenniferchen/.ssh/id_rsa'
+        #     mykey = paramiko.RSAKey.from_private_key_file(privatekeyfile)
+        #     transport = paramiko.Transport((hostname, port))
+        #     transport.connect(username = username, pkey = mykey)
+        #     sftp = paramiko.SFTPClient.from_transport(transport)
+        #
+        #     dirlist = sftp.listdir('.')
+        #     sftp.put(filepath, 'test/uploads/' + filename)
+        #
+        #     transport.close()
+        #
+        # except Exception as e:
+        #     print('*** Caught exception: %s: %s' % (e.__class__, e))
+        #     traceback.print_exc()
+        #     try:
+        #         t.close()
+        #     except:
+        #         pass
         #-------------------------------------
 
         return Response(filename)
@@ -139,9 +141,10 @@ def uploadByLink(request):
 @parser_classes((JSONParser,))
 def search(request):
     # uploadDir = os.path.abspath(__file__ + "/../../../images/")
+    uploadDir = "/nfs/div2/jchen/face-search/uploads/"
     # TODO temporary uploadDir, change to the above at deployment
     # -----------------------------------
-    uploadDir = "/nfs/div2/jchen/test/uploads/"
+    # uploadDir = "/nfs/div2/jchen/test/uploads/"
     # -----------------------------------
 
     parser_classes = (JSONParser,)

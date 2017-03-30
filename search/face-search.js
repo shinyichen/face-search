@@ -2,18 +2,23 @@
 
 
     angular.module('facesearch', ['ui.bootstrap', 'ngFileUpload', 'plotModule', 'facesearch.thumbnail'])
+        //.constant("URL", {
+        //    upload: "http://128.9.184.136:8000/search/upload",
+        //    uploadByLink: "http://128.9.184.136:8000/search/uploadByLink",
+        //    search: "http://128.9.184.136:8000/search/search"
+        //})
         .constant("URL", {
-            upload: "http://128.9.184.136:8000/search/upload",
-            uploadByLink: "http://128.9.184.136:8000/search/uploadByLink",
-            search: "http://128.9.184.136:8000/search/search"
+            upload: "http://isicvl03:8001/search/upload",
+            uploadByLink: "http://isicvl03:8001/search/uploadByLink",
+            search: "http://isicvl03:8001/search/search"
         })
 
         .controller('faceSearchController', ['$scope', '$http', 'URL', 'Upload', '$q', '$rootScope', function($scope, $http, URL, Upload, $q, $rootScope) {
 
-            $scope.uploadImageDir = "../images/";
+            $scope.uploadImageDir = "../uploads/";
 
-            //$scope.galleryImageDir = "/lfs2/glaive/data/CS3_2.0/"; // TODO use this at deployment for linking gallery images
-            $scope.galleryImageDir = "http://isicvl03:8001/gallery/";
+            $scope.galleryImageDir = "../gallery/"; // use this at deployment for linking gallery images
+            //$scope.galleryImageDir = "http://isicvl03:8001/gallery/";
 
             $scope.images = {};
 
