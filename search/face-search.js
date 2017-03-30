@@ -117,6 +117,12 @@
                 })
             };
 
+            $scope.clear = function() {
+                $scope.result = null;
+                $scope.images = {};
+                $scope.imageCount = 0;
+            }
+
         }])
 
         .run(['$http', '$rootScope', function($http, $rootScope) {

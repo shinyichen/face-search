@@ -76,6 +76,9 @@
                 <span ng-show="isSearching" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
                 Search
             </button>
+            <button class="btn btn-primary" ng-click="clear()" ng-disabled="isSearch">
+                Clear
+            </button>
 
             <!-- result -->
             <div id="result-table" class="result-panel" ng-if="result">

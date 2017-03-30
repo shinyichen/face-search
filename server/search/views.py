@@ -29,8 +29,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, parser_classes
 
-#clib
-import hello as h
 
 @api_view(['GET'])
 def initialize(request):
@@ -163,9 +161,3 @@ def search(request):
     print("Searching ...")
     r = requests.post("http://isicvl04:8080/search", json=payload)
     return JsonResponse(json.loads(r.text), safe=False)
-
-@api_view(['GET'])
-def hello(request):
-    if request.method == 'GET':
-        msg = h.greet()
-        return HttpResponse(msg)
