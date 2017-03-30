@@ -3,11 +3,9 @@
 
     angular.module('facesearch', ['ui.bootstrap', 'ngFileUpload', 'plotModule', 'facesearch.thumbnail'])
         .constant("URL", {
-            upload: "http://localhost:8000/search/upload",
-            uploadByLink: "http://localhost:8000/search/uploadByLink",
-            initialize: "http://localhost:8000/search/initialize",
-            search: "http://localhost:8000/search/search",
-            finalize: "http://localhost:8000/search/finalize"
+            upload: "http://128.9.184.136:8000/search/upload",
+            uploadByLink: "http://128.9.184.136:8000/search/uploadByLink",
+            search: "http://128.9.184.136:8000/search/search"
         })
 
         .controller('faceSearchController', ['$scope', '$http', 'URL', 'Upload', '$q', '$rootScope', function($scope, $http, URL, Upload, $q, $rootScope) {
