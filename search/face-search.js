@@ -25,6 +25,8 @@
 
             $scope.isUploading = false;
 
+            $scope.isSearching = false;
+
             $scope.formModel = {
                 "title": null,
                 "file": null,
@@ -105,11 +107,15 @@
             };
 
             $scope.search = function() {
+                $scope.result = null;
+                $scope.isSearching = true;
                 $http.post(URL.search, $scope.images).then(function(response) {
                     console.log(response.data);
                     $scope.result = response.data;
+                    $scope.isSearching = false;
                 }, function(error) {
                     console.log(error);
+                    $scope.isSearching = false;
                 })
             };
 

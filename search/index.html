@@ -33,12 +33,12 @@
                     <p>
                         <label>Upload an image:</label>
                         <input type="file" ngf-select ng-model="formModel.file" name="file"
-                               accept="image/*" ngf-max-size="19MB" required ng-change="upload()" ng-disabled="isUploading">
+                               accept="image/*" ngf-max-size="19MB" required ng-change="upload()" ng-disabled="isUploading || isSearching">
                     </p>
                     <p>
                         <label>Or provide image URL:</label>
                         <input type="text" ng-model="formModel.imageURL"/>
-                        <button class="btn btn-primary btn-xs" ng-disabled="isUploading" ng-click="upload()">Upload</button>
+                        <button class="btn btn-primary btn-xs" ng-disabled="isUploading || isSearching" ng-click="upload()">Upload</button>
                     </p>
                 </form>
 
@@ -72,7 +72,10 @@
                 </div>
             </div> <!-- end of image list -->
 
-            <button class="btn btn-primary" ng-click="search()" ng-disabled="imageCount == 0">Search</button>
+            <button class="btn btn-primary" ng-click="search()" ng-disabled="imageCount == 0 || isSearching">
+                <span ng-show="isSearching" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
+                Search
+            </button>
 
             <!-- result -->
             <div id="result-table" class="result-panel" ng-if="result">
