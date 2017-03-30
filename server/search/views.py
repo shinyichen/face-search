@@ -76,7 +76,7 @@ def upload(request):
             sftp = paramiko.SFTPClient.from_transport(transport)
 
             dirlist = sftp.listdir('.')
-            sftp.put(filepath, 'test/' + filename)
+            sftp.put(filepath, 'test/uploads/' + filename)
 
             transport.close()
 
@@ -122,7 +122,7 @@ def uploadByLink(request):
             sftp = paramiko.SFTPClient.from_transport(transport)
 
             dirlist = sftp.listdir('.')
-            sftp.put(filepath, 'test/' + filename)
+            sftp.put(filepath, 'test/uploads/' + filename)
 
             transport.close()
 
@@ -143,7 +143,7 @@ def search(request):
     # uploadDir = os.path.abspath(__file__ + "/../../../images/")
     # TODO temporary uploadDir, change to the above at deployment
     # -----------------------------------
-    uploadDir = "/nfs/div2/jchen/test"
+    uploadDir = "/nfs/div2/jchen/test/uploads/"
     # -----------------------------------
 
     parser_classes = (JSONParser,)
