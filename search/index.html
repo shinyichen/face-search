@@ -97,7 +97,7 @@
                         <td align="center">{{r.template_id}}</td>
                         <td align="center">{{r.similarity}}</td>
                         <td>
-                            <thumbnail ng-repeat="template in gallery[r.template_id] | limitTo: 5"
+                            <thumbnail ng-repeat="template in gallery[r.template_id] | limitTo: 7"
                                        class="img-thumbnail"
                                        img-src="{{galleryImageDir}}{{template.FILENAME}}"
                                        box-x="template.FACE_X"
@@ -107,7 +107,7 @@
                                        display-width="100"
                                        display-height="100"
                                        crop=true
-                                       style="vertical-align: bottom; cursor: pointer"></thumbnail>
+                                       style="vertical-align: bottom; padding-left: 5px; padding-right: 5px"></thumbnail>
                         </td>
                     </tr>
                     </tbody>
