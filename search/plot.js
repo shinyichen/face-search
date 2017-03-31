@@ -1,7 +1,7 @@
 (function() {
 
     angular.module('plotModule', ['ui.bootstrap', 'd3'])
-        .directive('plot', ['d3Service', '$timeout', function (d3Service, $timeout) {
+        .directive('plot', ['d3Service', '$timeout', function (d3Service) {
             return {
                 restrict: 'E',
                 scope: {
@@ -72,6 +72,7 @@
                                 .on("mouseup.zoomRect", function() {
                                     d3.select(window).on("mousemove.zoomRect", null).on("mouseup.zoomRect", null);
                                     drawn = true;
+                                    scope.$apply();
                                 }, true);
                             d3.event.stopImmediatePropagation();
                         });

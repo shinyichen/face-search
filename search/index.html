@@ -45,9 +45,9 @@
                 <div ng-if="imageFilename" ng-repeat="path in [imageFilename]" style="flex-grow: 1">
                     <p>Draw bounding box:</p>
                     <plot image-path="{{uploadImageDir}}/{{path}}" plot-api="plotAPI"></plot>
-                    <button class="btn btn-primary btn-xs" ng-click="resetImage()">Reset</button>
+                    <button class="btn btn-primary btn-xs" ng-click="resetImage()" ng-disabled="!plotAPI.isDrawn()">Reset</button>
                     <button class="btn btn-primary btn-xs" ng-click="cancelImage()">Cancel</button>
-                    <button class="btn btn-primary btn-xs" ng-click="addImage()">Add</button>
+                    <button class="btn btn-primary btn-xs" ng-click="addImage()" ng-disabled="!plotAPI.isDrawn()">Add</button>
                 </div>
             </div>
         </div> <!-- end of left panel -->
@@ -76,7 +76,7 @@
                 <span ng-show="isSearching" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
                 Search
             </button>
-            <button class="btn btn-primary" ng-click="clear()" ng-disabled="isSearch">
+            <button class="btn btn-primary" ng-click="clear()" ng-disabled="isSearching || (imageCount == 0 && !result)">
                 Clear
             </button>
 
