@@ -12,29 +12,31 @@
                     replace: true,
                     scope: {
                         src: '@imgSrc',      // source image path
-                        boxX: '=?',       // source image selected area x
-                        boxY: '=?',       // source image selected area y
-                        boxWidth: '=?',   // source image selected area width
-                        boxHeight: '=?',  // source image selected area height
+                        boxX: '@?',       // source image selected area x
+                        boxY: '@?',       // source image selected area y
+                        boxWidth: '@?',   // source image selected area width
+                        boxHeight: '@?',  // source image selected area height
                         displayWidth: '=?',   // max display width
                         displayHeight: '=?',  // max display height
                         box: "=?",       // draw bounding box of selected rectangle and use original image
-                        crop: "=?",       // crop the original image to bounding rectangle
+                        crop: "@?",       // crop the original image to bounding rectangle
                         match: "=?"       // applies when using box option, use different box color depending on match
                     },
                     link: function (scope, element) {
 
-                        scope.boxX = parseInt(scope.boxX);
-                        scope.boxY = parseInt(scope.boxY);
-                        if (scope.boxWidth)
+                        if (scope.boxX && scope.boxX !== "")
+                            scope.boxX = parseInt(scope.boxX);
+                        if (scope.boxY && scope.boxY !== "")
+                            scope.boxY = parseInt(scope.boxY);
+                        if (scope.boxWidth && scope.boxWidth !== "")
                             scope.boxWidth = parseInt(scope.boxWidth);
-                        if (scope.boxHeight)
+                        if (scope.boxHeight && scope.boxHeight !== "")
                             scope.boxHeight = parseInt(scope.boxHeight);
-                        if (scope.displayWidth)
+                        if (scope.displayWidth && scope.displayWidth !== "")
                             scope.displayWidth = parseInt(scope.displayWidth);
                         else
                             scope.displayWidth = window.innerWidth * 0.6;
-                        if (scope.displayHeight)
+                        if (scope.displayHeight && scope.displayHeight !== "")
                             scope.displayHeight = parseInt(scope.displayHeight);
                         else scope.displayHeight = window.innerHeight * 0.6;
 
@@ -51,7 +53,7 @@
                             var rx, ry, r, fWidth, fHeight, startX, startY;
 
                             // if cropping
-                            if (scope.crop) {
+                            if (scope.crop == true|| scope.crop == 'true') {
                                 rx = scope.boxWidth / scope.displayWidth;
                                 ry = scope.boxHeight / scope.displayHeight;
                                 r = Math.max(rx, ry);

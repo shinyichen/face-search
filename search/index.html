@@ -9,6 +9,7 @@
     <script src="../scripts/jquery-3.1.1.min.js"></script>
     <script src="../styles/bootstrap/js/bootstrap.min.js"></script>
     <script src="../scripts/ui-bootstrap-tpls-2.3.2.min.js"></script>
+    <script src="../scripts/ng-file-upload-shim.min.js"></script>
     <script src="../scripts/ng-file-upload.min.js"></script> <!-- file uploader -->
     <script src="d3.js"></script>
     <script src="plot.js"></script>
@@ -43,7 +44,7 @@
                 </form>
 
                 <div ng-if="imageFilename" ng-repeat="path in [imageFilename]" style="flex-grow: 1">
-                    <p>Draw bounding box:</p>
+                    <p><b>Draw bounding box:</b></p>
                     <plot image-path="{{uploadImageDir}}/{{path}}" plot-api="plotAPI"></plot>
                     <button class="btn btn-primary btn-xs" ng-click="resetImage()" ng-disabled="!plotAPI.isDrawn()">Reset</button>
                     <button class="btn btn-primary btn-xs" ng-click="cancelImage()">Cancel</button>
@@ -56,15 +57,18 @@
         <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 fill-height">
 
             <!-- image list -->
-            <div class="images-panel">
+            <div ngf-drop="uploadFiles($files)" class="images-panel"
+                 ngf-drag-over-class="'dragover'" ngf-multiple="true"
+                 ngf-pattern="'image/*'">
+                <span ng-if="imageCount == 0" style="text-align: center; color: lightgray;">Drop Images Here</span>
                 <div ng-repeat="(path, box) in images" style="position:relative;display: inline-block;">
                     <thumbnail class="thumbnail"
                                img-src="{{uploadImageDir}}/{{path}}"
-                               box-x="box.face_x"
-                               box-y="box.face_y"
-                               box-width="box.face_width"
-                               box-height="box.face_height"
-                               crop="true"
+                               box-x="{{box.face_x? box.face_x: undefined}}"
+                               box-y="{{box.face_y? box.face_y: undefined}}"
+                               box-width="{{box.face_width? box.face_width: undefined}}"
+                               box-height="{{box.face_height? box.face_height: undefined}}"
+                               crop="{{box.face_x? true : false}}"
                                display-height="200"
                                 display-width="200">
                     </thumbnail>
@@ -72,11 +76,11 @@
                 </div>
             </div> <!-- end of image list -->
 
-            <button class="btn btn-primary" ng-click="search()" ng-disabled="imageCount == 0 || isSearching">
+            <button class="btn btn-primary btn-xs" ng-click="search()" ng-disabled="imageCount == 0 || isSearching">
                 <span ng-show="isSearching" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
                 Search
             </button>
-            <button class="btn btn-primary" ng-click="clear()" ng-disabled="isSearching || (imageCount == 0 && !result)">
+            <button class="btn btn-primary btn-xs" ng-click="clear()" ng-disabled="isSearching || (imageCount == 0 && !result)">
                 Clear
             </button>
 

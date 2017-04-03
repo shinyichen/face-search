@@ -33,6 +33,7 @@
     margin-top: 10px;
     margin-bottom: 10px;
     overflow: scroll;
+    height: 50%;
 }
 
 .fill-height {
@@ -52,4 +53,8 @@
 @keyframes spin {
     from { transform: scale(1) rotate(0deg);}
     to { transform: scale(1) rotate(360deg);}
+}
+
+.dragover {
+    border: 5px dashed darkgray;
 }

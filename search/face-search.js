@@ -8,7 +8,7 @@
             search: "http://isicvl03:8001/search/search"
         })
 
-        .controller('faceSearchController', ['$scope', '$http', 'URL', 'Upload', '$q', '$rootScope', function($scope, $http, URL, Upload) {
+        .controller('faceSearchController', ['$scope', '$http', 'URL', 'Upload', '$q', function($scope, $http, URL, Upload, $q) {
 
             $scope.uploadImageDir = "../uploads/";
 
@@ -66,6 +66,30 @@
                         $scope.formModel.imageURL = null;
                         $scope.isUploading = false;
                     });
+                }
+            };
+
+            // upload multiple files using drag and drop
+            $scope.uploadFiles = function (files) {
+                if (files && files.length) {
+                    $scope.isUploading = true;
+                    var promises = [];
+                    for (var i = 0; i < files.length; i++) {
+                        promises.push(Upload.upload({
+                            url: URL.upload,
+                            data: {"file": files[i]}
+                        }));
+                    }
+
+                    $q.all(promises).then(function(responses) {
+                        responses.forEach(function(response) {
+                            var imageFileName = response.data;
+                            $scope.images[imageFileName] = {
+                            };
+                            $scope.imageCount += 1;
+                        });
+                        $scope.isUploading =false;
+                    })
                 }
             };
 
