@@ -33,6 +33,10 @@
 
             $scope.result = null;
 
+            $scope.plotAPI = {};
+
+            $scope.editing = false;
+
             $scope.upload = function() {
                 if ($scope.formModel.file) {
 
@@ -93,8 +97,6 @@
                 }
             };
 
-            $scope.plotAPI = {};
-
             $scope.resetImage = function() {
                 $scope.plotAPI.reset();
             };
@@ -115,17 +117,52 @@
                         "face_width": w,
                         "face_height": h
                     };
-                    $scope.imageFilename = null;
-                    $scope.imageCount += 1;
                     console.log(x + ", " + y + ", " + w + ", " + h);
                 } else {
-
+                    $scope.images[$scope.imageFilename] = {};
                 }
+
+                $scope.imageFilename = null;
+                $scope.imageCount += 1;
             };
 
             $scope.removeImage = function(path) {
                 delete $scope.images[path];
                 $scope.imageCount -= 1;
+            };
+
+            $scope.editImage = function(path) {
+                $scope.imageFilename = path;
+                $scope.editing = true;
+            };
+
+            $scope.applyEdit = function() {
+                var img = $scope.images[$scope.imageFilename];
+                if ($scope.plotAPI.isDrawn()) {
+                    var x = $scope.plotAPI.getFaceX();
+                    var y = $scope.plotAPI.getFaceY();
+                    var w = $scope.plotAPI.getFaceWidth();
+                    var h = $scope.plotAPI.getFaceHeight();
+
+                    img.face_x = x;
+                    img.face_y = y;
+                    img.face_width = w;
+                    img.face_height = h;
+                    console.log(x + ", " + y + ", " + w + ", " + h);
+                } else {
+                    delete img.face_x;
+                    delete img.face_y;
+                    delete img.face_width;
+                    delete img.face_height;
+                }
+
+                $scope.imageFilename = null;
+                $scope.editing = false;
+            };
+
+            $scope.cancelEdit = function() {
+                $scope.imageFilename = null;
+                $scope.editing = false;
             };
 
             $scope.search = function() {

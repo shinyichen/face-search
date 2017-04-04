@@ -34,21 +34,29 @@
                     <p>
                         <label>Upload an image:</label>
                         <input type="file" ngf-select ng-model="formModel.file" name="file"
-                               accept="image/*" ngf-max-size="19MB" required ng-change="upload()" ng-disabled="isUploading || isSearching">
+                               accept="image/*" ngf-max-size="19MB" required ng-change="upload()" ng-disabled="isUploading || isSearching || editing">
                     </p>
                     <p>
                         <label>Or provide image URL:</label>
                         <input type="text" ng-model="formModel.imageURL"/>
-                        <button class="btn btn-primary btn-xs" ng-disabled="isUploading || isSearching" ng-click="upload()">Upload</button>
+                        <button class="btn btn-primary btn-xs" ng-disabled="isUploading || isSearching || editing" ng-click="upload()">Upload</button>
                     </p>
                 </form>
 
                 <div ng-if="imageFilename" ng-repeat="path in [imageFilename]" style="flex-grow: 1">
-                    <p><b>Draw bounding box:</b></p>
+                    <p><b>Draw bounding box (optional):</b></p>
                     <plot image-path="{{uploadImageDir}}/{{path}}" plot-api="plotAPI"></plot>
-                    <button class="btn btn-primary btn-xs" ng-click="resetImage()" ng-disabled="!plotAPI.isDrawn()">Reset</button>
-                    <button class="btn btn-primary btn-xs" ng-click="cancelImage()">Cancel</button>
-                    <button class="btn btn-primary btn-xs" ng-click="addImage()" ng-disabled="!plotAPI.isDrawn()">Add</button>
+                    <div ng-if="!editing">
+                        <button class="btn btn-primary btn-xs" ng-click="resetImage()" ng-disabled="!plotAPI.isDrawn()">Reset</button>
+                        <button class="btn btn-primary btn-xs" ng-click="cancelImage()">Cancel</button>
+                        <button class="btn btn-primary btn-xs" ng-click="addImage()">Add</button>
+                    </div>
+                    <div ng-if="editing">
+                        <button class="btn btn-primary btn-xs" ng-click="resetImage()" ng-disabled="!plotAPI.isDrawn()">Reset</button>
+                        <button class="btn btn-primary btn-xs" ng-click="cancelEdit()">Cancel</button>
+                        <button class="btn btn-primary btn-xs" ng-click="applyEdit()">Apply</button>
+                    </div>
+
                 </div>
             </div>
         </div> <!-- end of left panel -->
@@ -61,7 +69,7 @@
                  ngf-drag-over-class="'dragover'" ngf-multiple="true"
                  ngf-pattern="'image/*'">
                 <span ng-if="imageCount == 0" style="text-align: center; color: lightgray;">Drop Images Here</span>
-                <div ng-repeat="(path, box) in images" style="position:relative;display: inline-block;">
+                <div ng-repeat="(path, box) in images track by $index" style="position:relative;display: inline-block;">
                     <thumbnail class="thumbnail"
                                img-src="{{uploadImageDir}}/{{path}}"
                                box-x="{{box.face_x? box.face_x: undefined}}"
@@ -72,7 +80,8 @@
                                display-height="200"
                                 display-width="200">
                     </thumbnail>
-                    <button class="btn thumbnail-close" ng-click="removeImage(path)">x</button>
+                    <button class="btn btn-xs thumbnail-close glyphicon glyphicon-remove" ng-click="removeImage(path)"></button>
+                    <button class="btn btn-xs thumbnail-edit glyphicon glyphicon-edit" ng-click="editImage(path)"></button>
                 </div>
             </div> <!-- end of image list -->
 
@@ -104,10 +113,10 @@
                             <thumbnail ng-repeat="template in gallery[r.template_id] | limitTo: 7"
                                        class="img-thumbnail"
                                        img-src="{{galleryImageDir}}{{template.FILENAME}}"
-                                       box-x="template.FACE_X"
-                                       box-y="template.FACE_Y"
-                                       box-width="template.FACE_WIDTH"
-                                       box-height="template.FACE_HEIGHT"
+                                       box-x="{{template.FACE_X}}"
+                                       box-y="{{template.FACE_Y}}"
+                                       box-width="{{template.FACE_WIDTH}}"
+                                       box-height="{{template.FACE_HEIGHT}}"
                                        display-width="100"
                                        display-height="100"
                                        crop=true
