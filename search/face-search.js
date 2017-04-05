@@ -1,7 +1,7 @@
 (function() {
 
 
-    angular.module('facesearch', ['ui.bootstrap', 'ngFileUpload', 'plotModule', 'facesearch.thumbnail'])
+    angular.module('facesearch', ['ui.bootstrap', 'ngFileUpload', 'plotModule', 'facesearch.thumbnail', 'angular-bootbox'])
         .constant("URL", {
             upload: "http://isicvl03:8001/search/upload",
             uploadByLink: "http://isicvl03:8001/search/uploadByLink",
@@ -37,6 +37,12 @@
 
             $scope.editing = false;
 
+            $scope.alerts = [];
+
+            $scope.closeAlert = function(index) {
+                $scope.alerts.splice(index, 1);
+            };
+
             $scope.upload = function() {
                 if ($scope.formModel.file) {
 
@@ -55,6 +61,8 @@
                         console.log(error);
                         $scope.formModel.file = null;
                         $scope.isUploading = false;
+
+                        $scope.alerts.push({"msg": "Upload failed: " + error.statusText});
                     });
                 } else if ($scope.formModel.imageURL) {
 
@@ -69,6 +77,8 @@
                         console.log(error);
                         $scope.formModel.imageURL = null;
                         $scope.isUploading = false;
+
+                        $scope.alerts.push({"msg": "Upload failed: " + error.statusText});
                     });
                 }
             };
@@ -92,6 +102,9 @@
                             };
                             $scope.imageCount += 1;
                         });
+                        $scope.isUploading =false;
+                    }, function(error) {
+                        $scope.alerts.push({"msg": "Upload failed: " + error.statusText});
                         $scope.isUploading =false;
                     })
                 }
@@ -175,6 +188,7 @@
                 }, function(error) {
                     console.log(error);
                     $scope.isSearching = false;
+                    $scope.alerts.push({"msg": "Search failed: " + error.statusText});
                 })
             };
 
@@ -186,7 +200,7 @@
 
         }])
 
-        .run(['$http', '$rootScope', function($http, $rootScope) {
+        .run(['$http', '$rootScope', 'bootbox', function($http, $rootScope, bootbox) {
 
             var gallery_file = "gallery.csv";
 
@@ -194,6 +208,11 @@
             $http.get(gallery_file).then(function(response) {
                 $rootScope.gallery = parseGallery(response.data);
             }, function(error) {
+                bootbox.alert({
+                    title: "Error loading gallery",
+                    message: error.statusText,
+                    size: "small"
+                })
             });
 
             /**

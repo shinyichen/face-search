@@ -11,14 +11,18 @@
     <script src="../scripts/ui-bootstrap-tpls-2.3.2.min.js"></script>
     <script src="../scripts/ng-file-upload-shim.min.js"></script>
     <script src="../scripts/ng-file-upload.min.js"></script> <!-- file uploader -->
+    <script src="../scripts/bootbox.min.js"></script> <!-- popup alert -->
     <script src="d3.js"></script>
     <script src="plot.js"></script>
     <script src="thumbnail.js"></script>
+    <script src="angular-bootbox.js"></script>
     <script src="face-search.js"></script>
 </head>
 <body class="fill-height">
 
 <div ng-controller="faceSearchController" class="container-fluid fill-height">
+
+    <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-danger'" dismiss-on-timeout="4000" close="closeAlert($index)">{{alert.msg}}</div>
 
     <!-- Input Area -->
     <div class="row fill-height">
