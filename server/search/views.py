@@ -152,13 +152,20 @@ def search(request):
     filenames = data.keys()
     payload = []
     for filename in filenames:
-        face_x = data[filename]['face_x']
-        face_y = data[filename]['face_y']
-        face_width = data[filename]['face_width']
-        face_height = data[filename]['face_height']
-        image_path = os.path.join(uploadDir, filename)
-        print("search got " + image_path)
-        payload.append({'image_path':image_path, 'face_x': face_x, 'face_y': face_y, 'face_width': face_width, 'face_height': face_height})
+        if 'face_x' in data[filename]:
+            face_x = data[filename]['face_x']
+            face_y = data[filename]['face_y']
+            face_width = data[filename]['face_width']
+            face_height = data[filename]['face_height']
+            image_path = os.path.join(uploadDir, filename)
+            print("search got " + image_path)
+            print("Has bounding box")
+            payload.append({'image_path':image_path, 'face_x': face_x, 'face_y': face_y, 'face_width': face_width, 'face_height': face_height})
+        else:
+            image_path = os.path.join(uploadDir, filename)
+            print("search got " + image_path)
+            print("no bounding box")
+            payload.append({'image_path':image_path})
 
     # search
     print("Searching ...")
