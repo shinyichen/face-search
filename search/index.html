@@ -92,8 +92,8 @@
                 </div>
             </div> <!-- end of image list -->
 
-            <label>Number of Results</label>
-            <input type="number" min="1" max="50" ng-model="formModel.maxResults" ng-change="validate()">
+            <label>No. of Results</label> (1 to 50)
+            <input type="number" min="1" max="50" ng-model="formModel.maxResults">
             <button class="btn btn-primary btn-xs" ng-click="search()" ng-disabled="imageCount == 0 || isSearching">
                 <span ng-show="isSearching" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
                 Search

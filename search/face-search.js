@@ -5,6 +5,7 @@
         .constant("URL", {
             upload: "http://isicvl03:8001/search/upload",
             uploadByLink: "http://isicvl03:8001/search/uploadByLink",
+            autodetect: "http://isicvl03:8001/search/autodetect",
             search: "http://isicvl03:8001/search/search"
         })
 
@@ -99,9 +100,17 @@
                     $q.all(promises).then(function(responses) {
                         responses.forEach(function(response) {
                             var imageFileName = response.data;
-                            $scope.images[imageFileName] = {
-                            };
-                            $scope.imageCount += 1;
+                            $http.post(URL.autodetect, {"filename": imageFileName}).then(function(response) {
+                                console.log(response);
+                                $scope.images[imageFileName] = {
+                                    "face_x": response.data.face_x,
+                                    "face_y": response.data.face_y,
+                                    "face_width": response.data.face_width,
+                                    "face_height": response.data.face_height
+                                };
+                                $scope.imageCount += 1;
+                            });
+
                         });
                         $scope.isUploading =false;
                     }, function(error) {
@@ -179,15 +188,10 @@
                 $scope.editing = false;
             };
 
-            $scope.validate = function() {
-                if (!$scope.formModel.maxResults || $scope.formModel.maxResults > 50 || $scope.formModel.maxResults < 0)
-                    $scope.formModel.maxResults = 20;
-            };
-
             $scope.search = function() {
                 $scope.result = null;
                 $scope.isSearching = true;
-                if ($scope.formModel.maxResults > 50 || $scope.formModel.maxResults < 0)
+                if (!$scope.formModel.maxResults || $scope.formModel.maxResults > 50 || $scope.formModel.maxResults < 1)
                     $scope.formModel.maxResults = 20;
 
                 // adding setting to payload then images

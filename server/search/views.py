@@ -138,6 +138,16 @@ def uploadByLink(request):
         return Response(filename)
 
 @api_view(['POST'])
+def autodetect(request):
+    filename = request.data["filename"]
+    uploadDir = "/nfs/div2/jchen/face-search/uploads/"
+    image_path = os.path.join(uploadDir, filename)
+
+    payload = {"image_path": image_path}
+    r = requests.post("http://isicvl04:8080/autodetect", json=payload)
+    return JsonResponse(json.loads(r.text), safe=False)
+
+@api_view(['POST'])
 @parser_classes((JSONParser,))
 def search(request):
     # uploadDir = os.path.abspath(__file__ + "/../../../images/")
