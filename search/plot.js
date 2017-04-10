@@ -27,8 +27,8 @@
                         var scale = 1;
 
                         var svg = d3.select(element[0]).append("svg");
-                        svg.attr("width", w)
-                            .attr("height", h);
+                        svg.attr("width", w);
+                        svg.attr("height", h);
 
                         var g = svg.append("g");
 

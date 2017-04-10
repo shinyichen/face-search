@@ -149,23 +149,31 @@ def search(request):
 
     parser_classes = (JSONParser,)
     data = request.data
-    filenames = data.keys()
     payload = []
+
+    # get settings
+    maxResults = data['settings']['maxResults']
+    # append settings as the first item in payload array
+    payload.append({'maxResults': maxResults})
+
+    # get images
+    filenames = data.keys()
     for filename in filenames:
-        if 'face_x' in data[filename]:
-            face_x = data[filename]['face_x']
-            face_y = data[filename]['face_y']
-            face_width = data[filename]['face_width']
-            face_height = data[filename]['face_height']
-            image_path = os.path.join(uploadDir, filename)
-            print("search got " + image_path)
-            print("Has bounding box")
-            payload.append({'image_path':image_path, 'face_x': face_x, 'face_y': face_y, 'face_width': face_width, 'face_height': face_height})
-        else:
-            image_path = os.path.join(uploadDir, filename)
-            print("search got " + image_path)
-            print("no bounding box")
-            payload.append({'image_path':image_path})
+        if filename != 'settings':
+            if 'face_x' in data[filename]:
+                face_x = data[filename]['face_x']
+                face_y = data[filename]['face_y']
+                face_width = data[filename]['face_width']
+                face_height = data[filename]['face_height']
+                image_path = os.path.join(uploadDir, filename)
+                print("search got " + image_path)
+                print("Has bounding box")
+                payload.append({'image_path':image_path, 'face_x': face_x, 'face_y': face_y, 'face_width': face_width, 'face_height': face_height})
+            else:
+                image_path = os.path.join(uploadDir, filename)
+                print("search got " + image_path)
+                print("no bounding box")
+                payload.append({'image_path':image_path})
 
     # search
     print("Searching ...")

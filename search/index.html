@@ -30,24 +30,27 @@
         <!-- Left Panel -->
         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 fill-height" style="display: flex; flex-direction: column; padding-top: 10px; padding-bottom: 10px">
 
-            <!-- logo -->
-            <img src="logo.png" style="max-width: 100%; padding-bottom: 10px">
+            <div class="left-panel">
+                <!-- logo -->
+                <img src="logo.png" class="logo">
 
-            <div class="rounded-panel" style="flex-grow: 1">
-                <form>
-                    <p>
-                        <label>Upload an image:</label>
-                        <input type="file" ngf-select ng-model="formModel.file" name="file"
-                               accept="image/*" ngf-max-size="19MB" required ng-change="upload()" ng-disabled="isUploading || isSearching || editing">
-                    </p>
-                    <p>
-                        <label>Or provide image URL:</label>
-                        <input type="text" ng-model="formModel.imageURL"/>
-                        <button class="btn btn-primary btn-xs" ng-disabled="isUploading || isSearching || editing" ng-click="upload()">Upload</button>
-                    </p>
-                </form>
+                <div class="rounded-panel">
+                    <form>
+                        <p>
+                            <label>Upload an image:</label>
+                            <input type="file" ngf-select ng-model="formModel.file" name="file"
+                                   accept="image/*" ngf-max-size="5MB" required ng-change="upload()" ng-disabled="isUploading || isSearching || editing">
+                        </p>
+                        <p>
+                            <label>Or provide image URL:</label>
+                            <input type="text" ng-model="formModel.imageURL"/>
+                            <button class="btn btn-primary btn-xs" ng-disabled="isUploading || isSearching || editing" ng-click="upload()">Upload</button>
+                        </p>
+                    </form>
 
-                <div ng-if="imageFilename" ng-repeat="path in [imageFilename]" style="flex-grow: 1">
+                </div>
+
+                <div class="edit-panel" ng-if="imageFilename" ng-repeat="path in [imageFilename]">
                     <p><b>Draw bounding box (optional):</b></p>
                     <plot image-path="{{uploadImageDir}}/{{path}}" plot-api="plotAPI"></plot>
                     <div ng-if="!editing">
@@ -71,7 +74,7 @@
             <!-- image list -->
             <div ngf-drop="uploadFiles($files)" class="images-panel"
                  ngf-drag-over-class="'dragover'" ngf-multiple="true"
-                 ngf-pattern="'image/*'">
+                 ngf-pattern="'image/*'" ngf-max-size="5MB">
                 <span ng-if="imageCount == 0" style="text-align: center; color: lightgray;">Drop Images Here</span>
                 <div ng-repeat="(path, box) in images track by $index" style="position:relative;display: inline-block;">
                     <thumbnail class="thumbnail"
@@ -89,6 +92,8 @@
                 </div>
             </div> <!-- end of image list -->
 
+            <label>Number of Results</label>
+            <input type="number" min="1" max="50" ng-model="formModel.maxResults" ng-change="validate()">
             <button class="btn btn-primary btn-xs" ng-click="search()" ng-disabled="imageCount == 0 || isSearching">
                 <span ng-show="isSearching" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
                 Search
@@ -104,7 +109,7 @@
                     <tr>
                         <th style="width: 1px; white-space: nowrap; align-content: center">Template ID</th>
                         <th style="width: 1px; white-space: nowrap">Similarity</th>
-                        <th>Images</th>
+                        <th>Subject</th>
                     </tr>
                     </thead>
 

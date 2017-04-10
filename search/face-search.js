@@ -28,7 +28,8 @@
             $scope.formModel = {
                 "title": null,
                 "file": null,
-                "imageURL": null
+                "imageURL": null,
+                "maxResults": 20
             };
 
             $scope.result = null;
@@ -178,10 +179,24 @@
                 $scope.editing = false;
             };
 
+            $scope.validate = function() {
+                if (!$scope.formModel.maxResults || $scope.formModel.maxResults > 50 || $scope.formModel.maxResults < 0)
+                    $scope.formModel.maxResults = 20;
+            };
+
             $scope.search = function() {
                 $scope.result = null;
                 $scope.isSearching = true;
-                $http.post(URL.search, $scope.images).then(function(response) {
+                if ($scope.formModel.maxResults > 50 || $scope.formModel.maxResults < 0)
+                    $scope.formModel.maxResults = 20;
+
+                // adding setting to payload then images
+                var payload = {};
+                payload["settings"] = {"maxResults": $scope.formModel.maxResults};
+                for (var key in $scope.images) {
+                    payload[key] = $scope.images[key];
+                }
+                $http.post(URL.search, payload).then(function(response) {
                     console.log(response.data);
                     $scope.result = response.data;
                     $scope.isSearching = false;
