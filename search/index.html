@@ -16,6 +16,7 @@
     <script src="plot.js"></script>
     <script src="thumbnail.js"></script>
     <script src="angular-bootbox.js"></script>
+    <script src="modalComponents.js"></script>
     <script src="face-search.js"></script>
 </head>
 <body class="fill-height">
@@ -85,7 +86,9 @@
                                box-height="{{box.face_height? box.face_height: undefined}}"
                                crop="{{box.face_x? true : false}}"
                                display-height="150"
-                                display-width="150">
+                                display-width="150"
+                                ng-click="debug(path)"
+                                style="cursor: pointer">
                     </thumbnail>
                     <button class="btn btn-xs thumbnail-close glyphicon glyphicon-remove" ng-click="removeImage(path)"></button>
                     <button class="btn btn-xs thumbnail-edit glyphicon glyphicon-edit" ng-click="editImage(path)"></button>

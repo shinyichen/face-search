@@ -1,15 +1,16 @@
 (function() {
 
 
-    angular.module('facesearch', ['ui.bootstrap', 'ngFileUpload', 'plotModule', 'facesearch.thumbnail', 'angular-bootbox'])
+    angular.module('facesearch', ['ui.bootstrap', 'ngFileUpload', 'plotModule', 'facesearch.thumbnail', 'angular-bootbox', 'modals'])
         .constant("URL", {
             upload: "http://isicvl03:8001/search/upload",
             uploadByLink: "http://isicvl03:8001/search/uploadByLink",
             autodetect: "http://isicvl03:8001/search/autodetect",
-            search: "http://isicvl03:8001/search/search"
+            search: "http://isicvl03:8001/search/search",
+            debug: "http://isicvl03:8001/search/debug"
         })
 
-        .controller('faceSearchController', ['$scope', '$http', 'URL', 'Upload', '$q', function($scope, $http, URL, Upload, $q) {
+        .controller('faceSearchController', ['$scope', '$http', 'URL', 'Upload', '$q', '$uibModal', function($scope, $http, URL, Upload, $q, $uibModal) {
 
             $scope.uploadImageDir = "../uploads/";
 
@@ -30,7 +31,7 @@
                 "title": null,
                 "file": null,
                 "imageURL": null,
-                "maxResults": 20
+                "maxResults": 50
             };
 
             $scope.result = null;
@@ -40,6 +41,8 @@
             $scope.editing = false;
 
             $scope.alerts = [];
+
+            $scope.debugData = {};
 
             $scope.closeAlert = function(index) {
                 $scope.alerts.splice(index, 1);
@@ -192,7 +195,7 @@
                 $scope.result = null;
                 $scope.isSearching = true;
                 if (!$scope.formModel.maxResults || $scope.formModel.maxResults > 50 || $scope.formModel.maxResults < 1)
-                    $scope.formModel.maxResults = 20;
+                    $scope.formModel.maxResults = 50;
 
                 // adding setting to payload then images
                 var payload = {};
@@ -216,6 +219,68 @@
                 $scope.images = {};
                 $scope.imageCount = 0;
             };
+
+            $scope.debug = function(filename) {
+                var img = $scope.images[filename];
+                var data = $scope.debugData[filename];
+                if ($scope.debugData[filename]) {
+                    $uibModal.open({
+                        animation: true,
+                        backdrop: true,
+                        keyboard: true,
+                        size: 'lg',
+                        component: 'debugModalComponent',
+                        resolve: {
+                            params: function () {
+                                return {
+                                    "yaw": data.yaw,
+                                    "original": $scope.uploadImageDir + filename,
+                                    "face_x":img.face_x,
+                                    "face_y": img.face_y,
+                                    "face_width": img.face_width,
+                                    "face_height": img.face_height,
+                                    //"cropped": data.cropped,
+                                    //"renderedFr": data.renderedFr,
+                                    //"renderedHp": data.renderedHp,
+                                    //"renderedFp": data.renderedFp,
+                                    "landmarks": data.landmarks,
+                                    "confidence": data.confidence
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    $http.post(URL.debug, {"filename": filename, face_x: img.face_x, face_y: img.face_y, face_width: img.face_width, face_height: img.face_height}).then(function(response) {
+                        $scope.debugData[filename] = response.data;
+                        var data = $scope.debugData[filename];
+                        $uibModal.open({
+                            animation: true,
+                            backdrop: true,
+                            keyboard: true,
+                            size: 'lg',
+                            component: 'debugModalComponent',
+                            resolve: {
+                                params: function () {
+                                    return {
+                                        "yaw": data.yaw,
+                                        "original": $scope.uploadImageDir + filename,
+                                        "face_x":img.face_x,
+                                        "face_y": img.face_y,
+                                        "face_width": img.face_width,
+                                        "face_height": img.face_height,
+                                        //"cropped": data.cropped,
+                                        //"renderedFr": data.renderedFr,
+                                        //"renderedHp": data.renderedHp,
+                                        //"renderedFp": data.renderedFp,
+                                        "landmarks": data.landmarks,
+                                        "confidence": data.confidence
+                                    }
+                                }
+                            }
+                        });
+                    });
+                }
+            }
 
         }])
 

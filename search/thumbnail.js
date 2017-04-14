@@ -20,7 +20,8 @@
                         displayHeight: '=?',  // max display height
                         box: "=?",       // draw bounding box of selected rectangle and use original image
                         crop: "@?",       // crop the original image to bounding rectangle
-                        match: "=?"       // applies when using box option, use different box color depending on match
+                        match: "=?",       // applies when using box option, use different box color depending on match
+                        landmarks: "=?"
                     },
                     link: function (scope, element) {
 
@@ -67,6 +68,17 @@
                                     startX = (canvas.width - fWidth) / 2;
                                     startY = (canvas.height - fHeight) / 2;
                                     ctx.drawImage(img, scope.boxX, scope.boxY, scope.boxWidth, scope.boxHeight, startX, startY, fWidth, fHeight);
+
+                                    if (scope.landmarks) {
+                                        for (var i = 0; i < scope.landmarks.length; i++) {
+                                            var x = (scope.landmarks[i].x - scope.boxX) / r;
+                                            var y = (scope.landmarks[i].y - scope.boxY) / r;
+                                            ctx.beginPath();
+                                            ctx.arc(x - rx + startX, y + ry + startY, 1, 0, 2*Math.PI, false);
+                                            ctx.fillStyle = 'blue';
+                                            ctx.fill();
+                                        }
+                                    }
                                 } else {
                                     rx = img.naturalWidth / scope.displayWidth;
                                     ry = img.naturalHeight / scope.displayHeight;
@@ -91,6 +103,18 @@
                                         ctx.lineWidth = 1;
                                         ctx.strokeRect(startX + (scope.boxX/r) - 8, startY + (scope.boxY/r) - 8, scope.boxWidth/r + 16, scope.boxHeight/r + 16);
                                     }
+
+                                    if (scope.landmarks) {
+                                        for (var i = 0; i < scope.landmarks.length; i++) {
+                                            var x = scope.landmarks[i].x / r;
+                                            var y = scope.landmarks[i].y / r;
+                                            ctx.beginPath();
+                                            ctx.arc(x + startX, y + startY, 1, 0, 2*Math.PI, false);
+                                            ctx.fillStyle = 'blue';
+                                            ctx.fill();
+                                        }
+                                    }
+
                                 }
 
                             }, false);

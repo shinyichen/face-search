@@ -1,0 +1,16 @@
+<div class="modal-header">
+    <button class="btn btn-default pull-right modal-close" type="button" ng-click="$ctrl.close()">X</button>
+</div>
+<div class="modal-body">
+    <div>YAW: {{$ctrl.yaw}}</div>
+    <div>Confidence: {{$ctrl.confidence}}</div>
+    <thumbnail style="display: block; margin: auto;"
+               img-src="{{$ctrl.original}}"
+               box-x="{{$ctrl.face_x}}"
+               box-y="{{$ctrl.face_y}}"
+               box-width="{{$ctrl.face_width}}"
+               box-height="{{$ctrl.face_height}}"
+               crop="true"
+                landmarks="$ctrl.landmarks">
+    </thumbnail>
+</div>

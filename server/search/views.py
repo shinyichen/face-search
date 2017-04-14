@@ -147,6 +147,17 @@ def autodetect(request):
     r = requests.post("http://isicvl04:8080/autodetect", json=payload)
     return JsonResponse(json.loads(r.text), safe=False)
 
+
+@api_view(['POST'])
+def debug(request):
+    filename = request.data["filename"]
+    uploadDir = "/nfs/div2/jchen/face-search/uploads/"
+    image_path = os.path.join(uploadDir, filename)
+
+    payload = {"image_path": image_path, "face_x": request.data["face_x"], "face_y": request.data["face_y"], "face_width": request.data["face_width"], "face_height": request.data["face_height"]}
+    r = requests.post("http://isicvl04:8080/debug", json=payload)
+    return JsonResponse(json.loads(r.text), safe=False)
+
 @api_view(['POST'])
 @parser_classes((JSONParser,))
 def search(request):

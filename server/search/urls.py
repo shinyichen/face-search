@@ -8,5 +8,6 @@ urlpatterns = [
     url(r'^initialize$', views.initialize, name='initialize'),
     url(r'^finalize$', views.finalize, name='finalize'),
     url(r'^autodetect$', views.autodetect, name='autodetect'),
+    url(r'^debug$', views.debug, name='debug'),
     url(r'^search$', views.search, name='search'),
 ]
