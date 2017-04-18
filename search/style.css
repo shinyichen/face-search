@@ -5,6 +5,24 @@
     margin-bottom: 10px;
     border-radius: 5px;
 }
+
+#spinner{
+    background: #fff;
+    width: 130px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 14px 0;
+    border: 1px solid #C3C3C3;
+    border-radius: 7px;
+    color: #828282;
+    top: 50vh;
+    position: absolute;
+    left: 50%;
+    margin-top: -75px;
+    margin-left: -75px;
+    z-index: 10;
+}
+
 .thumbnail{
     width: auto;
     height: 150px;
@@ -26,6 +44,20 @@
     left:5px;
     margin:0;
     padding:5px 3px;
+}
+
+.thumbnail-landmarks{
+    width: auto;
+    height: 400px;
+    overflow: auto;
+    margin:2px;
+}
+
+.thumbnail-rendered{
+    width: auto;
+    height: 200px;
+    overflow: auto;
+    margin:2px;
 }
 
 .rounded-panel {

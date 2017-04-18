@@ -27,6 +27,8 @@
 
             $scope.isSearching = false;
 
+            $scope.isDebugging = false;
+
             $scope.formModel = {
                 "title": null,
                 "file": null,
@@ -49,7 +51,7 @@
             };
 
             $scope.upload = function() {
-                if ($scope.formModel.file) {
+                if ($scope.formModel.file) { // upload local file
 
                     $scope.isUploading = true;
                     Upload.upload({
@@ -69,7 +71,7 @@
 
                         $scope.alerts.push({"msg": "Upload failed: " + error.statusText});
                     });
-                } else if ($scope.formModel.imageURL) {
+                } else if ($scope.formModel.imageURL) { // upload by url
 
                     $scope.isUploading = true;
                     $http.post(URL.uploadByLink, {"imageURL": $scope.formModel.imageURL}).then(function (response) {
@@ -144,16 +146,30 @@
                         "face_height": h
                     };
                     console.log(x + ", " + y + ", " + w + ", " + h);
-                } else {
-                    $scope.images[$scope.imageFilename] = {};
-                }
 
-                $scope.imageFilename = null;
-                $scope.imageCount += 1;
+                    $scope.imageFilename = null;
+                    $scope.imageCount += 1;
+
+                } else {
+                    // boundaries not drawn, auto detect
+                    $http.post(URL.autodetect, {"filename": $scope.imageFilename}).then(function(response) {
+                        console.log(response);
+                        $scope.images[$scope.imageFilename] = {
+                            "face_x": response.data.face_x,
+                            "face_y": response.data.face_y,
+                            "face_width": response.data.face_width,
+                            "face_height": response.data.face_height
+                        };
+
+                        $scope.imageFilename = null;
+                        $scope.imageCount += 1;
+                    });
+                }
             };
 
             $scope.removeImage = function(path) {
                 delete $scope.images[path];
+                delete $scope.debugData[path];
                 $scope.imageCount -= 1;
             };
 
@@ -175,18 +191,30 @@
                     img.face_width = w;
                     img.face_height = h;
                     console.log(x + ", " + y + ", " + w + ", " + h);
+
+                    // remove debug data
+                    delete $scope.debugData[$scope.imageFilename];
+
+                    $scope.imageFilename = null;
+                    $scope.editing = false;
+
                 } else {
-                    delete img.face_x;
-                    delete img.face_y;
-                    delete img.face_width;
-                    delete img.face_height;
+                    // boundaries not drawn, auto detect
+                    $http.post(URL.autodetect, {"filename": $scope.imageFilename}).then(function(response) {
+                        console.log(response);
+                        img.face_x = response.data.face_x;
+                        img.face_y = response.data.face_y;
+                        img.face_width = response.data.face_width;
+                        img.face_height = response.data.face_height;
+
+                        // remove debug data
+                        delete $scope.debugData[$scope.imageFilename];
+
+                        $scope.imageFilename = null;
+                        $scope.editing = false;
+                    });
                 }
 
-                // remove debug data
-                delete $scope.debugData[$scope.imageFilename];
-
-                $scope.imageFilename = null;
-                $scope.editing = false;
             };
 
             $scope.cancelEdit = function() {
@@ -254,6 +282,7 @@
                         }
                     });
                 } else {
+                    $scope.isDebugging = true;
                     $http.post(URL.debug, {"filename": filename, face_x: img.face_x, face_y: img.face_y, face_width: img.face_width, face_height: img.face_height}).then(function(response) {
                         $scope.debugData[filename] = response.data;
                         var data = $scope.debugData[filename];
@@ -284,6 +313,10 @@
                                 }
                             }
                         });
+                        $scope.isDebugging = false;
+                    }, function(error) {
+                        $scope.alerts.push({"msg": "Debug failed: " + error.statusText});
+                        $scope.isDebugging = false;
                     });
                 }
             }
