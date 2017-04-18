@@ -11,6 +11,31 @@
                box-width="{{$ctrl.face_width}}"
                box-height="{{$ctrl.face_height}}"
                crop="true"
+               display-width=300
+               display-height=300
                 landmarks="$ctrl.landmarks">
     </thumbnail>
+    <div>
+        <thumbnail style="display: block; margin: auto;"
+                   img-src="{{$ctrl.renderedFr}}"
+                   display-width="200"
+                   display-height="200">
+        </thumbnail>
+        <thumbnail style="display: block; margin: auto;"
+                   img-src="{{$ctrl.renderedHp}}"
+                   display-width="200"
+                   display-height="200">
+        </thumbnail>
+        <thumbnail style="display: block; margin: auto;"
+                   img-src="{{$ctrl.renderedFp}}"
+                   display-width="200"
+                   display-height="200">
+        </thumbnail>
+        <thumbnail style="display: block; margin: auto;"
+                   img-src="{{$ctrl.aligned}}"
+                   display-width="200"
+                   display-height="200">
+        </thumbnail>
+    </div>
+
 </div>

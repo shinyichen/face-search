@@ -20,9 +20,11 @@
                     $ctrl.face_y = $ctrl.resolve.params.face_y;
                     $ctrl.face_width = $ctrl.resolve.params.face_width;
                     $ctrl.face_height = $ctrl.resolve.params.face_height;
-                    //$ctrl.renderedFr = $ctrl.resolve.params.renderedFr;
-                    //$ctrl.renderedHp = $ctrl.resolve.params.renderedHp;
-                    //$ctrl.renderedFp = $ctrl.resolve.params.renderedFp;
+                    $ctrl.cropped = $ctrl.resolve.params.cropped;
+                    $ctrl.renderedFr = $ctrl.resolve.params.renderedFr;
+                    $ctrl.renderedHp = $ctrl.resolve.params.renderedHp;
+                    $ctrl.renderedFp = $ctrl.resolve.params.renderedFp;
+                    $ctrl.aligned = $ctrl.resolve.params.aligned;
                     $ctrl.landmarks = $ctrl.resolve.params.landmarks;
                     $ctrl.confidence = $ctrl.resolve.params.confidence;
                 };

@@ -239,10 +239,11 @@
                                     "face_y": img.face_y,
                                     "face_width": img.face_width,
                                     "face_height": img.face_height,
-                                    //"cropped": data.cropped,
-                                    //"renderedFr": data.renderedFr,
-                                    //"renderedHp": data.renderedHp,
-                                    //"renderedFp": data.renderedFp,
+                                    "cropped": $scope.uploadImageDir + data.cropped,
+                                    "renderedFr": $scope.uploadImageDir + data.rend_fr,
+                                    "renderedHp": $scope.uploadImageDir + data.rend_hp,
+                                    "renderedFp": $scope.uploadImageDir + data.rend_fp,
+                                    "aligned": $scope.uploadImageDir + data.aligned,
                                     "landmarks": data.landmarks,
                                     "confidence": data.confidence
                                 }
@@ -253,6 +254,7 @@
                     $http.post(URL.debug, {"filename": filename, face_x: img.face_x, face_y: img.face_y, face_width: img.face_width, face_height: img.face_height}).then(function(response) {
                         $scope.debugData[filename] = response.data;
                         var data = $scope.debugData[filename];
+                        console.log(data);
                         $uibModal.open({
                             animation: true,
                             backdrop: true,
@@ -268,10 +270,11 @@
                                         "face_y": img.face_y,
                                         "face_width": img.face_width,
                                         "face_height": img.face_height,
-                                        //"cropped": data.cropped,
-                                        //"renderedFr": data.renderedFr,
-                                        //"renderedHp": data.renderedHp,
-                                        //"renderedFp": data.renderedFp,
+                                        "cropped": $scope.uploadImageDir + data.cropped,
+                                        "renderedFr": $scope.uploadImageDir + data.rend_fr,
+                                        "renderedHp": $scope.uploadImageDir + data.rend_hp,
+                                        "renderedFp": $scope.uploadImageDir + data.rend_fp,
+                                        "aligned": $scope.uploadImageDir + data.aligned,
                                         "landmarks": data.landmarks,
                                         "confidence": data.confidence
                                     }
