@@ -27,7 +27,7 @@
     <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-danger'" dismiss-on-timeout="4000" close="closeAlert($index)">{{alert.msg}}</div>
 
     <!-- loading spinner -->
-    <div ng-show="isDebugging" id="spinner">
+    <div ng-show="isBusy" id="spinner">
         <img src="spinner.gif" style="display: block; margin: 0 auto; width: 32px; height: 32px; opacity: 0.8;"/>
         <div style="margin-top: 15px;">Loading...</div>
     </div>
@@ -47,12 +47,12 @@
                         <p>
                             <label>Upload an image:</label>
                             <input type="file" ngf-select ng-model="formModel.file" name="file"
-                                   accept="image/*" ngf-max-size="5MB" required ng-change="upload()" ng-disabled="isUploading || isSearching || isDebugging || editing">
+                                   accept="image/*" ngf-max-size="5MB" required ng-change="upload()" ng-disabled="isBusy || editing">
                         </p>
                         <p>
                             <label>Or provide image URL:</label>
                             <input type="text" ng-model="formModel.imageURL"/>
-                            <button class="btn btn-primary btn-xs" ng-disabled="isUploading || isSearching || isDebugging || editing" ng-click="upload()">Upload</button>
+                            <button class="btn btn-primary btn-xs" ng-disabled="isBusy|| editing" ng-click="upload()">Upload</button>
                         </p>
                     </form>
 
@@ -94,7 +94,7 @@
                                crop="{{box.face_x? true : false}}"
                                display-height="150"
                                 display-width="150"
-                                ng-click="isUploading || isSearching || isDebugging || debug(path)"
+                                ng-click="isBusy || debug(path)"
                                 style="cursor: pointer">
                     </thumbnail>
                     <button class="btn btn-xs thumbnail-close glyphicon glyphicon-remove" ng-click="removeImage(path)"></button>
@@ -104,11 +104,11 @@
 
             <label>No. of Results</label> (1 to 50)
             <input type="number" min="1" max="50" ng-model="formModel.maxResults">
-            <button class="btn btn-primary btn-xs" ng-click="search()" ng-disabled="imageCount == 0 || isUploading || isSearching || isDebugging">
+            <button class="btn btn-primary btn-xs" ng-click="search()" ng-disabled="imageCount == 0 || isBusy">
                 <span ng-show="isSearching" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
                 Search
             </button>
-            <button class="btn btn-primary btn-xs" ng-click="clear()" ng-disabled="isUploading || isSearching || isDebugging || (imageCount == 0 && !result)">
+            <button class="btn btn-primary btn-xs" ng-click="clear()" ng-disabled="isBusy || (imageCount == 0 && !result)">
                 Clear
             </button>
 

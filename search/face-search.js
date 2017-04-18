@@ -23,11 +23,9 @@
 
             $scope.imageFilename = null;
 
-            $scope.isUploading = false;
+            $scope.isBusy = false;
 
             $scope.isSearching = false;
-
-            $scope.isDebugging = false;
 
             $scope.formModel = {
                 "title": null,
@@ -51,14 +49,19 @@
             };
 
             $scope.upload = function() {
+                if ($scope.isBusy) {
+                    $scope.alerts.push({"msg": "App is busy. Try again later!"});
+                    return;
+                }
+
                 if ($scope.formModel.file) { // upload local file
 
-                    $scope.isUploading = true;
+                    $scope.isBusy = true;
                     Upload.upload({
                         url: URL.upload,
                         data: {"file": $scope.formModel.file}
                     }).then(function (response) {
-                        $scope.isUploading = false;
+                        $scope.isBusy = false;
                         console.log(response.data);
 
                         $scope.imageFilename = response.data;
@@ -67,15 +70,15 @@
                     }, function (error) {
                         console.log(error);
                         $scope.formModel.file = null;
-                        $scope.isUploading = false;
+                        $scope.isBusy = false;
 
                         $scope.alerts.push({"msg": "Upload failed: " + error.statusText});
                     });
                 } else if ($scope.formModel.imageURL) { // upload by url
 
-                    $scope.isUploading = true;
+                    $scope.isBusy = true;
                     $http.post(URL.uploadByLink, {"imageURL": $scope.formModel.imageURL}).then(function (response) {
-                        $scope.isUploading = false;
+                        $scope.isBusy = false;
                         console.log(response.data);
 
                         $scope.imageFilename = response.data;
@@ -83,7 +86,7 @@
                     }, function (error) {
                         console.log(error);
                         $scope.formModel.imageURL = null;
-                        $scope.isUploading = false;
+                        $scope.isBusy = false;
 
                         $scope.alerts.push({"msg": "Upload failed: " + error.statusText});
                     });
@@ -92,8 +95,13 @@
 
             // upload multiple files using drag and drop
             $scope.uploadFiles = function (files) {
+                if ($scope.isBusy) {
+                    $scope.alerts.push({"msg": "App is busy. Try again later!"});
+                    return;
+                }
+
                 if (files && files.length) {
-                    $scope.isUploading = true;
+                    $scope.isBusy = true;
                     var promises = [];
                     for (var i = 0; i < files.length; i++) {
                         promises.push(Upload.upload({
@@ -117,10 +125,10 @@
                             });
 
                         });
-                        $scope.isUploading =false;
+                        $scope.isBusy =false;
                     }, function(error) {
                         $scope.alerts.push({"msg": "Upload failed: " + error.statusText});
-                        $scope.isUploading =false;
+                        $scope.isBusy =false;
                     })
                 }
             };
@@ -223,8 +231,14 @@
             };
 
             $scope.search = function() {
-                $scope.result = null;
+                if ($scope.isBusy) {
+                    $scope.alerts.push({"msg": "App is busy. Try again later!"});
+                    return;
+                }
+
                 $scope.isSearching = true;
+                $scope.result = null;
+                $scope.isBusy = true;
                 if (!$scope.formModel.maxResults || $scope.formModel.maxResults > 50 || $scope.formModel.maxResults < 1)
                     $scope.formModel.maxResults = 50;
 
@@ -237,9 +251,11 @@
                 $http.post(URL.search, payload).then(function(response) {
                     console.log(response.data);
                     $scope.result = response.data;
+                    $scope.isBusy = false;
                     $scope.isSearching = false;
                 }, function(error) {
                     console.log(error);
+                    $scope.isBusy = false;
                     $scope.isSearching = false;
                     $scope.alerts.push({"msg": "Search failed: " + error.statusText});
                 })
@@ -282,7 +298,12 @@
                         }
                     });
                 } else {
-                    $scope.isDebugging = true;
+                    if ($scope.isBusy) {
+                        $scope.alerts.push({"msg": "App is busy. Try again later!"});
+                        return;
+                    }
+
+                    $scope.isBusy = true;
                     $http.post(URL.debug, {"filename": filename, face_x: img.face_x, face_y: img.face_y, face_width: img.face_width, face_height: img.face_height}).then(function(response) {
                         $scope.debugData[filename] = response.data;
                         var data = $scope.debugData[filename];
@@ -313,10 +334,10 @@
                                 }
                             }
                         });
-                        $scope.isDebugging = false;
+                        $scope.isBusy = false;
                     }, function(error) {
                         $scope.alerts.push({"msg": "Debug failed: " + error.statusText});
-                        $scope.isDebugging = false;
+                        $scope.isBusy = false;
                     });
                 }
             }
