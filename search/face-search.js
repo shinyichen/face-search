@@ -182,6 +182,9 @@
                     delete img.face_height;
                 }
 
+                // remove debug data
+                delete $scope.debugData[$scope.imageFilename];
+
                 $scope.imageFilename = null;
                 $scope.editing = false;
             };
