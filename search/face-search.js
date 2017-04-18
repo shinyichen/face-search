@@ -122,6 +122,10 @@
                                     "face_height": response.data.face_height
                                 };
                                 $scope.imageCount += 1;
+                            }, function(error) {
+                                $scope.alerts.push({"msg": "Face auto detect failed: " + error.statusText});
+                                $scope.isBusy =false;
+                                return;
                             });
 
                         });
@@ -160,6 +164,13 @@
 
                 } else {
                     // boundaries not drawn, auto detect
+
+                    if ($scope.isBusy) {
+                        $scope.alerts.push({"msg": "Unable to auto detect boundaries while app is busy. Try again later!"});
+                        return;
+                    }
+
+                    $scope.isBusy = true;
                     $http.post(URL.autodetect, {"filename": $scope.imageFilename}).then(function(response) {
                         console.log(response);
                         $scope.images[$scope.imageFilename] = {
@@ -171,6 +182,10 @@
 
                         $scope.imageFilename = null;
                         $scope.imageCount += 1;
+                        $scope.isBusy = false;
+                    }, function(error) {
+                        $scope.alerts.push({"msg": "Face auto detect failed: " + error.statusText});
+                        $scope.isBusy = false;
                     });
                 }
             };
@@ -208,6 +223,12 @@
 
                 } else {
                     // boundaries not drawn, auto detect
+                    if ($scope.isBusy) {
+                        $scope.alerts.push({"msg": "Unable to auto detect boundaries while app is busy. Try again later!"});
+                        return;
+                    }
+
+                    $scope.isBusy = true;
                     $http.post(URL.autodetect, {"filename": $scope.imageFilename}).then(function(response) {
                         console.log(response);
                         img.face_x = response.data.face_x;
@@ -220,6 +241,10 @@
 
                         $scope.imageFilename = null;
                         $scope.editing = false;
+                        $scope.isBusy = false;
+                    }, function(error) {
+                        $scope.alerts.push({"msg": "Face auto detect failed: " + error.statusText});
+                        $scope.isBusy = false;
                     });
                 }
 
@@ -286,11 +311,11 @@
                                     "face_y": img.face_y,
                                     "face_width": img.face_width,
                                     "face_height": img.face_height,
-                                    "cropped": $scope.uploadImageDir + data.cropped,
-                                    "renderedFr": $scope.uploadImageDir + data.rend_fr,
-                                    "renderedHp": $scope.uploadImageDir + data.rend_hp,
-                                    "renderedFp": $scope.uploadImageDir + data.rend_fp,
-                                    "aligned": $scope.uploadImageDir + data.aligned,
+                                    "cropped": (data.cropped? $scope.uploadImageDir + data.cropped : null),
+                                    "renderedFr": (data.rend_fr? $scope.uploadImageDir + data.rend_fr : null),
+                                    "renderedHp": (data.rend_hp? $scope.uploadImageDir + data.rend_hp : null),
+                                    "renderedFp": (data.rend_fp? $scope.uploadImageDir + data.rend_fp : null),
+                                    "aligned": (data.aligned? $scope.uploadImageDir + data.aligned : null),
                                     "landmarks": data.landmarks,
                                     "confidence": data.confidence
                                 }
@@ -323,11 +348,11 @@
                                         "face_y": img.face_y,
                                         "face_width": img.face_width,
                                         "face_height": img.face_height,
-                                        "cropped": $scope.uploadImageDir + data.cropped,
-                                        "renderedFr": $scope.uploadImageDir + data.rend_fr,
-                                        "renderedHp": $scope.uploadImageDir + data.rend_hp,
-                                        "renderedFp": $scope.uploadImageDir + data.rend_fp,
-                                        "aligned": $scope.uploadImageDir + data.aligned,
+                                        "cropped": (data.cropped? $scope.uploadImageDir + data.cropped : null),
+                                        "renderedFr": (data.rend_fr? $scope.uploadImageDir + data.rend_fr : null),
+                                        "renderedHp": (data.rend_hp? $scope.uploadImageDir + data.rend_hp : null),
+                                        "renderedFp": (data.rend_fp? $scope.uploadImageDir + data.rend_fp : null),
+                                        "aligned": (data.aligned? $scope.uploadImageDir + data.aligned : null),
                                         "landmarks": data.landmarks,
                                         "confidence": data.confidence
                                     }

@@ -29,11 +29,14 @@
                 <td align="center">
                     <figure class="figure">
                         <figcaption class="figure-caption"><b>Rendered Front</b></figcaption>
-                        <thumbnail class="thumbnail thumbnail-rendered"
-                                   img-src="{{$ctrl.renderedFr}}"
-                                   display-width="200"
-                                   display-height="200">
-                        </thumbnail>
+                        <span ng-switch="$ctrl.renderedFr !== null">
+                            <thumbnail ng-switch-when="true" class="thumbnail thumbnail-rendered"
+                                       img-src="{{$ctrl.renderedFr}}"
+                                       display-width="200"
+                                       display-height="200">
+                            </thumbnail>
+                            <span ng-switch-when="false">Not Available</span>
+                        </span>
                     </figure>
                 </td>
             </tr>
@@ -41,23 +44,29 @@
                 <td align="center">
                     <figure class="figure">
                         <figcaption class="figure-caption"><b>Rendered Half-Profile</b></figcaption>
-                    <thumbnail class="thumbnail thumbnail-rendered"
-                               img-src="{{$ctrl.renderedHp}}"
-                               display-width="200"
-                               display-height="200">
-                    </thumbnail>
-                        </figure>
+                        <span ng-switch="$ctrl.renderedHp !== null">
+                            <thumbnail ng-switch-when="true"  class="thumbnail thumbnail-rendered"
+                                       img-src="{{$ctrl.renderedHp}}"
+                                       display-width="200"
+                                       display-height="200">
+                            </thumbnail>
+                             <span ng-switch-when="false">Not Available</span>
+                        </span>
+                    </figure>
                 </td>
             </tr>
             <tr>
                 <td align="center">
                     <figure class="figure">
                         <figcaption class="figure-caption"><b>Rendered Full-Profile</b></figcaption>
-                        <thumbnail class="thumbnail thumbnail-rendered"
-                                   img-src="{{$ctrl.renderedFp}}"
-                                   display-width="200"
-                                   display-height="200">
-                        </thumbnail>
+                        <span ng-switch="$ctrl.renderedFp !== null">
+                            <thumbnail ng-switch-when="true"  class="thumbnail thumbnail-rendered"
+                                       img-src="{{$ctrl.renderedFp}}"
+                                       display-width="200"
+                                       display-height="200">
+                            </thumbnail>
+                            <span ng-switch-when="false">Not Available</span>
+                        </span>
                     </figure>
                 </td>
             </tr>
