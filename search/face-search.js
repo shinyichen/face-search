@@ -275,7 +275,11 @@
                 }
                 $http.post(URL.search, payload).then(function(response) {
                     console.log(response.data);
-                    $scope.result = response.data;
+                    $scope.result = response.data.results;
+                    for (var filename in $scope.images) {
+                        $scope.debugData[filename] = response.data[filename];
+                    }
+
                     $scope.isBusy = false;
                     $scope.isSearching = false;
                 }, function(error) {
