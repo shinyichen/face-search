@@ -29,5 +29,30 @@
                     $ctrl.confidence = $ctrl.resolve.params.confidence;
                 };
             }
+        })
+
+        .component('selectModalComponent', {
+            templateUrl: 'selectModal.html',
+            bindings: {
+                resolve: '<',
+                close: '&',
+                dismiss: '&'
+            },
+            controller: function () {
+                var $ctrl = this;
+
+                $ctrl.$onInit = function () {
+                    $ctrl.file = $ctrl.resolve.params.file;
+                    $ctrl.data = $ctrl.resolve.params.data;
+                };
+
+                $ctrl.ok = function (index) {
+                    $ctrl.close({$value: index});
+                };
+
+                $ctrl.cancel = function () {
+                    $ctrl.dismiss({$value: 'cancel'});
+                };
+            }
         });
 })();

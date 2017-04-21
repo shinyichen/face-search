@@ -115,12 +115,48 @@
                             var imageFileName = response.data;
                             $http.post(URL.autodetect, {"filename": imageFileName}).then(function(response) {
                                 console.log(response);
-                                $scope.images[imageFileName] = {
-                                    "face_x": response.data.face_x,
-                                    "face_y": response.data.face_y,
-                                    "face_width": response.data.face_width,
-                                    "face_height": response.data.face_height
-                                };
+                                if (response.data.length > 1) {
+                                    // TODO more than 1 face detected, select
+                                    var modalInstance = $uibModal.open({
+                                        animation: true,
+                                        backdrop: true,
+                                        keyboard: true,
+                                        size: 'lg',
+                                        component: 'debugModalComponent',
+                                        resolve: {
+                                            params: function () {
+                                                return {
+                                                    "file": $scope.uploadImageDir + imageFileName,
+                                                    "data": response.data
+                                                }
+                                            }
+                                        }
+                                    });
+                                    modalInstance.result.then(function (selectedItem) {
+                                        $scope.images[imageFileName] = {
+                                            "face_x": response.data[selectedItem].face_x,
+                                            "face_y": response.data[selectedItem].face_y,
+                                            "face_width": response.data[selectedItem].face_width,
+                                            "face_height": response.data[selectedItem].face_height
+                                        };
+                                    }, function () {
+                                        // dialog dismissed without selecting
+                                        // automatically select the first one
+                                        $scope.images[imageFileName] = {
+                                            "face_x": response.data[0].face_x,
+                                            "face_y": response.data[0].face_y,
+                                            "face_width": response.data[0].face_width,
+                                            "face_height": response.data[0].face_height
+                                        };
+                                    });
+                                } else {
+                                    $scope.images[imageFileName] = {
+                                        "face_x": response.data[0].face_x,
+                                        "face_y": response.data[0].face_y,
+                                        "face_width": response.data[0].face_width,
+                                        "face_height": response.data[0].face_height
+                                    };
+                                }
                                 $scope.imageCount += 1;
                             }, function(error) {
                                 $scope.alerts.push({"msg": "Face auto detect failed: " + error.statusText});
