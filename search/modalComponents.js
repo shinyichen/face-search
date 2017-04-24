@@ -51,7 +51,7 @@
                 };
 
                 $ctrl.cancel = function () {
-                    $ctrl.dismiss({$value: 'cancel'});
+                    $ctrl.close({$value: index});
                 };
             }
         });

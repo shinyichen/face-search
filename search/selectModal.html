@@ -1,18 +1,21 @@
 <div class="modal-header">
     <button class="btn btn-default pull-right modal-close" type="button" ng-click="$ctrl.close()">X</button>
-    <b>Select from auto detected faces</b>
+    <h4 class="text-center">Auto Face Detection</h4>
 </div>
 <div class="modal-body">
-    <thumbnail ng-repeat="d in $ctrl.data track by $index"
-               class="thumbnail"
-               img-src="{{$ctrl.file}}"
-               box-x="{{d.face_x}}"
-               box-y="{{d.face_y}}"
-               box-width="{{d.face_width}}"
-               box-height="{{d.face_height}}"
-               crop="true"
-               display-width=150
-               display-height=150
-                ng-click="$ctrl.ok($index)">
-    </thumbnail>
+    <div>Select from auto face detection</div>
+    <div ng-repeat="d in $ctrl.data track by $index" style="position:relative;display: inline-block;">
+        <thumbnail class="thumbnail"
+                   img-src="{{$ctrl.file}}"
+                   box-x="{{d.face_x}}"
+                   box-y="{{d.face_y}}"
+                   box-width="{{d.face_width}}"
+                   box-height="{{d.face_height}}"
+                   crop="true"
+                   display-width=150
+                   display-height=150
+                    ng-click="$ctrl.ok($index)"
+                    style="cursor: pointer">
+        </thumbnail>
+    </div>
 </div>
