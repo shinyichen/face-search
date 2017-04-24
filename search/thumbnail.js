@@ -25,7 +25,7 @@
                     },
                     link: function (scope, element) {
 
-                        scope.$watch('boxX', function() {
+                        scope.$watch('src', function() {
                             scope.draw();
                         });
 
