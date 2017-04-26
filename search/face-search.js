@@ -444,7 +444,13 @@
                                     "renderedFp": (data.rend_fp? $scope.uploadImageDir + data.rend_fp : null),
                                     "aligned": (data.aligned? $scope.uploadImageDir + data.aligned : null),
                                     "landmarks": data.landmarks,
-                                    "confidence": data.confidence
+                                    "confidence": data.confidence,
+                                    "landmark_dur": data.landmark_dur,
+                                    "pose_dur": data.pose_dur,
+                                    "render_dur": data.render_dur,
+                                    "align_dur": data.align_dur,
+                                    "featex_dur": data.featex_dur,
+                                    "featex_batch_dur": data.featex_batch_dur
                                 }
                             }
                         }
@@ -481,7 +487,13 @@
                                         "renderedFp": (data.rend_fp? $scope.uploadImageDir + data.rend_fp : null),
                                         "aligned": (data.aligned? $scope.uploadImageDir + data.aligned : null),
                                         "landmarks": data.landmarks,
-                                        "confidence": data.confidence
+                                        "confidence": data.confidence,
+                                        "landmark_dur": data.landmark_dur,
+                                        "pose_dur": data.pose_dur,
+                                        "render_dur": data.render_dur,
+                                        "align_dur": data.align_dur,
+                                        "featex_dur": data.featex_dur,
+                                        "featex_batch_dur": data.featex_batch_dur
                                     }
                                 }
                             }

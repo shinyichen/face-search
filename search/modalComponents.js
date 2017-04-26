@@ -27,6 +27,12 @@
                     $ctrl.aligned = $ctrl.resolve.params.aligned;
                     $ctrl.landmarks = $ctrl.resolve.params.landmarks;
                     $ctrl.confidence = $ctrl.resolve.params.confidence;
+                    $ctrl.landmark_dur = $ctrl.resolve.params.landmark_dur;
+                    $ctrl.pose_dur = $ctrl.resolve.params.pose_dur;
+                    $ctrl.render_dur = $ctrl.resolve.params.render_dur;
+                    $ctrl.align_dur = $ctrl.resolve.params.align_dur;
+                    $ctrl.featex_dur = $ctrl.resolve.params.featex_dur;
+                    $ctrl.featex_batch_dur = $ctrl.resolve.params.featex_batch_dur;
                 };
             }
         })

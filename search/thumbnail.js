@@ -25,8 +25,13 @@
                     },
                     link: function (scope, element) {
 
-                        scope.$watch('src', function() {
-                            scope.draw();
+                        scope.$watch('src', function(newv, oldv) {
+                            if (newv !== oldv)
+                                scope.draw();
+                        });
+                        scope.$watch('boxX', function(newv, oldv) {
+                            if (newv !== oldv)
+                                scope.draw();
                         });
 
                         scope.draw = function() {

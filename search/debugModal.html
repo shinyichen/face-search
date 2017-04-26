@@ -1,12 +1,35 @@
 <div class="modal-header">
     <button class="btn btn-default pull-right modal-close" type="button" ng-click="$ctrl.close()">X</button>
-    <b>
-        <div>YAW: {{$ctrl.yaw}}</div>
-        <div>Confidence: {{$ctrl.confidence}}</div>
-    </b>
 </div>
 <div class="modal-body">
     <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>YAW</th>
+                <th>Confidence</th>
+                <th>Landmark Detection</th>
+                <th>Pose Detection</th>
+                <th>Render</th>
+                <th>Align</th>
+                <th>Feature Extraction</th>
+                <th>Feature Extraction Batch</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{$ctrl.yaw}}</td>
+                <td>{{$ctrl.confidence}}</td>
+                <td>{{$ctrl.landmark_dur}} ms</td>
+                <td>{{$ctrl.pose_dur}} ms</td>
+                <td>{{$ctrl.render_dur}} ms</td>
+                <td>{{$ctrl.align_dur}} ms</td>
+                <td>{{$ctrl.featex_dur}} ms</td>
+                <td>{{$ctrl.featex_batch_dur}} ms</td>
+            </tr>
+            </tbody>
+        </table>
+
         <table class="table table-striped table-bordered">
             <tbody>
             <tr>
