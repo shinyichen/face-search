@@ -45,9 +45,10 @@
                 <div class="rounded-panel">
                     <form>
                         <p>
-                            <label>Upload an image:</label>
-                            <input type="file" ngf-select ng-model="formModel.file" name="file"
-                                   accept="image/*" ngf-max-size="5MB" required ng-change="upload()" ng-disabled="isBusy || editing">
+                            <label>Upload image(s):</label>
+                            <button class="btn btn-xs btn-primary" ngf-select="uploadFiles($files)" multiple accept="image/*" ngf-max-size="5MB" ng-disabled="isBusy || editing">
+                                Select Files
+                            </button>
                         </p>
                         <p>
                             <label>Or provide image URL:</label>
