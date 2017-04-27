@@ -4,9 +4,9 @@
 </div>
 <div class="modal-body">
     <div>Select from auto face detection</div>
-    <div ng-repeat="d in $ctrl.data track by $index" style="position:relative;display: inline-block;">
+    <div ng-repeat="d in $ctrl.currentData track by $index" style="position:relative;display: inline-block;">
         <thumbnail class="thumbnail"
-                   img-src="{{$ctrl.file}}"
+                   img-src="{{$ctrl.uploadDir}}{{$ctrl.files[$ctrl.currentIndex]}}"
                    box-x="{{d.face_x}}"
                    box-y="{{d.face_y}}"
                    box-width="{{d.face_width}}"
@@ -14,7 +14,7 @@
                    crop="true"
                    display-width=150
                    display-height=150
-                    ng-click="$ctrl.ok($index)"
+                    ng-click="$ctrl.select($index)"
                     style="cursor: pointer">
         </thumbnail>
     </div>

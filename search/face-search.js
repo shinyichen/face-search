@@ -109,68 +109,75 @@
                             data: {"file": files[i]}
                         }));
                     }
+                    $q.all(promises).then(function (responses) {
 
-                    $q.all(promises).then(function(responses) {
+                        // get a list of filenames of images uploaded
+                        var imageFileNames = [];
                         responses.forEach(function(response) {
-                            var imageFileName = response.data;
-                            $http.post(URL.autodetect, {"filename": imageFileName}).then(function(response) {
-                                console.log(response);
-                                if (response.data.length > 1) {
-                                    var modalInstance = $uibModal.open({
-                                        animation: true,
-                                        backdrop: true,
-                                        keyboard: true,
-                                        size: 'lg',
-                                        component: 'selectModalComponent',
-                                        resolve: {
-                                            params: function () {
-                                                return {
-                                                    "file": $scope.uploadImageDir + imageFileName,
-                                                    "data": response.data
-                                                }
-                                            }
-                                        }
-                                    });
-                                    modalInstance.result.then(function (selectedItem) {
-                                        if (!selectedItem)
-                                            selectedItem = 0;
-                                        $scope.images[imageFileName] = {
-                                            "face_x": response.data[selectedItem].face_x,
-                                            "face_y": response.data[selectedItem].face_y,
-                                            "face_width": response.data[selectedItem].face_width,
-                                            "face_height": response.data[selectedItem].face_height
-                                        };
-                                    }, function () {
-                                        // dialog dismissed without selecting
-                                        // automatically select the first one
-                                        $scope.images[imageFileName] = {
-                                            "face_x": response.data[0].face_x,
-                                            "face_y": response.data[0].face_y,
-                                            "face_width": response.data[0].face_width,
-                                            "face_height": response.data[0].face_height
-                                        };
-                                    });
+                            imageFileNames.push(response.data);
+                        });
+
+                        // do face detect
+                        $http.post(URL.autodetect, {"filenames": imageFileNames}).then(function (res) {
+                            console.log(res);
+                            var s_files = [];
+                            var s_data = [];
+                            for (var i = 0; i < res.data.length; i++) {
+                                var data = res.data[i];
+                                if (data.length > 1) { // detected multiple faces
+                                    s_files.push(imageFileNames[i]);
+                                    s_data.push(data);
                                 } else {
-                                    $scope.images[imageFileName] = {
-                                        "face_x": response.data[0].face_x,
-                                        "face_y": response.data[0].face_y,
-                                        "face_width": response.data[0].face_width,
-                                        "face_height": response.data[0].face_height
+                                    $scope.images[imageFileNames[i]] = {
+                                        "face_x": data[0].face_x,
+                                        "face_y": data[0].face_y,
+                                        "face_width": data[0].face_width,
+                                        "face_height": data[0].face_height
                                     };
                                 }
                                 $scope.imageCount += 1;
-                            }, function(error) {
-                                $scope.alerts.push({"msg": "Face auto detect failed: " + error.statusText});
-                                $scope.isBusy =false;
-                                return;
-                            });
+                            }
 
+                            if (s_files.length > 0) {
+                                var modalInstance = $uibModal.open({
+                                    animation: true,
+                                    backdrop: true,
+                                    keyboard: true,
+                                    size: 'lg',
+                                    component: 'selectModalComponent',
+                                    resolve: {
+                                        params: function () {
+                                            return {
+                                                "uploadDir": $scope.uploadImageDir,
+                                                "files": s_files,
+                                                "data": s_data
+                                            }
+                                        }
+                                    }
+                                });
+                                modalInstance.result.then(function (selectedIndices) {
+                                    for (var i = 0; i < s_files.length; i++) {
+                                        $scope.images[s_files[i]] = {
+                                            "face_x": s_data[i][selectedIndices[i]].face_x,
+                                            "face_y": s_data[i][selectedIndices[i]].face_y,
+                                            "face_width": s_data[i][selectedIndices[i]].face_width,
+                                            "face_height": s_data[i][selectedIndices[i]].face_height
+                                        };
+                                    }
+                                });
+                            }
+
+                        }, function (error) {
+                            $scope.alerts.push({"msg": "Face auto detect failed: " + error.statusText});
+                            $scope.isBusy = false;
+                            return;
                         });
-                        $scope.isBusy =false;
-                    }, function(error) {
+
+                        $scope.isBusy = false;
+                    }, function (error) {
                         $scope.alerts.push({"msg": "Upload failed: " + error.statusText});
-                        $scope.isBusy =false;
-                    })
+                        $scope.isBusy = false;
+                    });
                 }
             };
 
@@ -208,9 +215,9 @@
                     }
 
                     $scope.isBusy = true;
-                    $http.post(URL.autodetect, {"filename": $scope.imageFilename}).then(function(response) {
+                    $http.post(URL.autodetect, {"filenames": [$scope.imageFilename]}).then(function(response) {
                         console.log(response);
-                        if (response.data.length > 1) {
+                        if (response.data[0].length > 1) {
                             var modalInstance = $uibModal.open({
                                 animation: true,
                                 backdrop: true,
@@ -220,32 +227,18 @@
                                 resolve: {
                                     params: function () {
                                         return {
-                                            "file": $scope.uploadImageDir + $scope.imageFilename,
-                                            "data": response.data
+                                            "files": [$scope.uploadImageDir + $scope.imageFilename],
+                                            "data": response.data[0]
                                         }
                                     }
                                 }
                             });
-                            modalInstance.result.then(function (selectedItem) {
-                                if (!selectedItem)
-                                    selectedItem = 0;
+                            modalInstance.result.then(function (selectedIndices) {
                                 $scope.images[$scope.imageFilename] = {
-                                    "face_x": response.data[selectedItem].face_x,
-                                    "face_y": response.data[selectedItem].face_y,
-                                    "face_width": response.data[selectedItem].face_width,
-                                    "face_height": response.data[selectedItem].face_height
-                                };
-                                $scope.imageFilename = null;
-                                $scope.imageCount += 1;
-                                $scope.isBusy = false;
-                            }, function () {
-                                // dialog dismissed without selecting
-                                // automatically select the first one
-                                $scope.images[$scope.imageFilename] = {
-                                    "face_x": response.data[0].face_x,
-                                    "face_y": response.data[0].face_y,
-                                    "face_width": response.data[0].face_width,
-                                    "face_height": response.data[0].face_height
+                                    "face_x": response.data[0][selectedIndices[0]].face_x,
+                                    "face_y": response.data[0][selectedIndices[0]].face_y,
+                                    "face_width": response.data[0][selectedIndices[0]].face_width,
+                                    "face_height": response.data[0][selectedIndices[0]].face_height
                                 };
                                 $scope.imageFilename = null;
                                 $scope.imageCount += 1;
@@ -253,10 +246,10 @@
                             });
                         } else {
                             $scope.images[$scope.imageFilename] = {
-                                "face_x": response.data[0].face_x,
-                                "face_y": response.data[0].face_y,
-                                "face_width": response.data[0].face_width,
-                                "face_height": response.data[0].face_height
+                                "face_x": response.data[0][0].face_x,
+                                "face_y": response.data[0][0].face_y,
+                                "face_width": response.data[0][0].face_width,
+                                "face_height": response.data[0][0].face_height
                             };
                             $scope.imageFilename = null;
                             $scope.imageCount += 1;
@@ -309,9 +302,9 @@
                     }
 
                     $scope.isBusy = true;
-                    $http.post(URL.autodetect, {"filename": $scope.imageFilename}).then(function(response) {
+                    $http.post(URL.autodetect, {"filenames": [$scope.imageFilename]}).then(function(response) {
                         console.log(response);
-                        if (response.data.length > 1) {
+                        if (response.data[0].length > 1) {
                             var modalInstance = $uibModal.open({
                                 animation: true,
                                 backdrop: true,
@@ -321,18 +314,18 @@
                                 resolve: {
                                     params: function () {
                                         return {
-                                            "file": $scope.uploadImageDir + $scope.imageFilename,
-                                            "data": response.data
+                                            "files": [$scope.uploadImageDir + $scope.imageFilename],
+                                            "data": response.data[0]
                                         }
                                     }
                                 }
                             });
-                            modalInstance.result.then(function (selectedItem) {
+                            modalInstance.result.then(function (selectedIndices) {
                                 $scope.images[$scope.imageFilename] = {
-                                    "face_x": response.data[selectedItem].face_x,
-                                    "face_y": response.data[selectedItem].face_y,
-                                    "face_width": response.data[selectedItem].face_width,
-                                    "face_height": response.data[selectedItem].face_height
+                                    "face_x": response.data[0][selectedIndices[0]].face_x,
+                                    "face_y": response.data[0][selectedIndices[0]].face_y,
+                                    "face_width": response.data[0][selectedIndices[0]].face_width,
+                                    "face_height": response.data[0][selectedIndices[0]].face_height
                                 };
                                 $scope.imageFilename = null;
                                 $scope.editing = false;
@@ -341,10 +334,10 @@
                                 // dialog dismissed without selecting
                                 // automatically select the first one
                                 $scope.images[$scope.imageFilename] = {
-                                    "face_x": response.data[0].face_x,
-                                    "face_y": response.data[0].face_y,
-                                    "face_width": response.data[0].face_width,
-                                    "face_height": response.data[0].face_height
+                                    "face_x": response.data[0][0].face_x,
+                                    "face_y": response.data[0][0].face_y,
+                                    "face_width": response.data[0][0].face_width,
+                                    "face_height": response.data[0][0].face_height
                                 };
                                 $scope.imageFilename = null;
                                 $scope.editing = false;
@@ -352,10 +345,10 @@
                             });
                         } else {
                             $scope.images[$scope.imageFilename] = {
-                                "face_x": response.data[0].face_x,
-                                "face_y": response.data[0].face_y,
-                                "face_width": response.data[0].face_width,
-                                "face_height": response.data[0].face_height
+                                "face_x": response.data[0][0].face_x,
+                                "face_y": response.data[0][0].face_y,
+                                "face_width": response.data[0][0].face_width,
+                                "face_height": response.data[0][0].face_height
                             };
                             $scope.imageFilename = null;
                             $scope.editing = false;

@@ -48,16 +48,34 @@
                 var $ctrl = this;
 
                 $ctrl.$onInit = function () {
-                    $ctrl.file = $ctrl.resolve.params.file;
+                    $ctrl.uploadDir = $ctrl.resolve.params.uploadDir;
+                    $ctrl.files = $ctrl.resolve.params.files;
                     $ctrl.data = $ctrl.resolve.params.data;
+                    $ctrl.currentIndex = 0;
+                    $ctrl.currentData = $ctrl.data[0];
                 };
 
-                $ctrl.ok = function (index) {
-                    $ctrl.close({$value: index});
+                var selections = [];
+
+                $ctrl.select = function(i) {
+                    selections[$ctrl.currentIndex] = i;
+                    if ($ctrl.currentIndex == $ctrl.files.length - 1) {
+                        $ctrl.ok(selections);
+                    } else {
+                        $ctrl.currentIndex += 1;
+                        $ctrl.currentData = $ctrl.data[$ctrl.currentIndex];
+                    }
+                };
+
+                $ctrl.ok = function (selections) {
+                    $ctrl.close({$value: selections});
                 };
 
                 $ctrl.cancel = function () {
-                    $ctrl.close({$value: index});
+                    for (var i = $ctrl.currentIndex; i < $ctrl.files.length; i++) {
+                        $ctrl.selection[i] = 0;
+                    }
+                    $ctrl.close({$value: selections});
                 };
             }
         });

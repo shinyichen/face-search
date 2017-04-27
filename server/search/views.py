@@ -33,13 +33,13 @@ from rest_framework.decorators import api_view, parser_classes
 @api_view(['GET'])
 def initialize(request):
     print("initialize...")
-    res = urllib2.urlopen("http://isicvl01:8081/initialize").read()
+    res = urllib2.urlopen("http://isicvl05:8081/initialize").read()
     return HttpResponse(res)
 
 @api_view(['GET'])
 def finalize(request):
     print("finalize...")
-    res = urllib2.urlopen("http://isicvl01:8081/finalize").read()
+    res = urllib2.urlopen("http://isicvl05:8081/finalize").read()
     return HttpResponse(res)
 
 @api_view(['POST'])
@@ -139,12 +139,14 @@ def uploadByLink(request):
 
 @api_view(['POST'])
 def autodetect(request):
-    filename = request.data["filename"]
+    filenames = request.data["filenames"]
     uploadDir = "/nfs/div2/jchen/face-search/uploads/"
-    image_path = os.path.join(uploadDir, filename)
+    payload = []
+    for filename in filenames:
+        image_path = os.path.join(uploadDir, filename)
+        payload.append(image_path)
 
-    payload = {"image_path": image_path}
-    r = requests.post("http://isicvl01:8081/autodetect", json=payload)
+    r = requests.post("http://isicvl05:8081/autodetect", json=payload)
     return JsonResponse(json.loads(r.text), safe=False)
 
 
@@ -155,7 +157,7 @@ def debug(request):
     image_path = os.path.join(uploadDir, filename)
 
     payload = {"image_path": image_path, "face_x": request.data["face_x"], "face_y": request.data["face_y"], "face_width": request.data["face_width"], "face_height": request.data["face_height"]}
-    r = requests.post("http://isicvl01:8081/debug", json=payload)
+    r = requests.post("http://isicvl05:8081/debug", json=payload)
     return JsonResponse(json.loads(r.text), safe=False)
 
 @api_view(['POST'])
@@ -198,5 +200,5 @@ def search(request):
 
     # search
     print("Searching ...")
-    r = requests.post("http://isicvl01:8081/search", json=payload)
+    r = requests.post("http://isicvl05:8081/search", json=payload)
     return JsonResponse(json.loads(r.text), safe=False)
