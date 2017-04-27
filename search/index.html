@@ -53,7 +53,7 @@
                         <p>
                             <label>Or provide image URL:</label>
                             <input type="text" ng-model="formModel.imageURL"/>
-                            <button class="btn btn-primary btn-xs" ng-disabled="isBusy|| editing" ng-click="upload()">Upload</button>
+                            <button class="btn btn-primary btn-xs" ng-disabled="isBusy|| editing" ng-click="uploadByURL()">Upload</button>
                         </p>
                     </form>
 
@@ -62,12 +62,7 @@
                 <div class="edit-panel" ng-if="imageFilename" ng-repeat="path in [imageFilename]">
                     <p><b>Draw bounding box (optional):</b></p>
                     <plot image-path="{{uploadImageDir}}/{{path}}" plot-api="plotAPI"></plot>
-                    <div ng-if="!editing">
-                        <button class="btn btn-primary btn-xs" ng-click="resetImage()" ng-disabled="!plotAPI.isDrawn()">Reset</button>
-                        <button class="btn btn-primary btn-xs" ng-click="cancelImage()">Cancel</button>
-                        <button class="btn btn-primary btn-xs" ng-click="addImage()">Add</button>
-                    </div>
-                    <div ng-if="editing">
+                    <div>
                         <button class="btn btn-primary btn-xs" ng-click="resetImage()" ng-disabled="!plotAPI.isDrawn()">Reset</button>
                         <button class="btn btn-primary btn-xs" ng-click="cancelEdit()">Cancel</button>
                         <button class="btn btn-primary btn-xs" ng-click="applyEdit()">Apply</button>

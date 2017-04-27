@@ -48,33 +48,13 @@
                 $scope.alerts.splice(index, 1);
             };
 
-            $scope.upload = function() {
+            $scope.uploadByURL = function() {
                 if ($scope.isBusy) {
                     $scope.alerts.push({"msg": "App is busy. Try again later!"});
                     return;
                 }
 
-                if ($scope.formModel.file) { // upload local file
-
-                    $scope.isBusy = true;
-                    Upload.upload({
-                        url: URL.upload,
-                        data: {"file": $scope.formModel.file}
-                    }).then(function (response) {
-                        $scope.isBusy = false;
-                        console.log(response.data);
-
-                        $scope.imageFilename = response.data;
-                        $scope.formModel.file = null;
-
-                    }, function (error) {
-                        console.log(error);
-                        $scope.formModel.file = null;
-                        $scope.isBusy = false;
-
-                        $scope.alerts.push({"msg": "Upload failed: " + error.statusText});
-                    });
-                } else if ($scope.formModel.imageURL) { // upload by url
+                if ($scope.formModel.imageURL) { // upload by url
 
                     $scope.isBusy = true;
                     $http.post(URL.uploadByLink, {"imageURL": $scope.formModel.imageURL}).then(function (response) {
@@ -138,80 +118,6 @@
                 $scope.imageFilename = null;
             };
 
-            $scope.addImage = function() {
-                if ($scope.plotAPI.isDrawn()) {
-                    var x=  $scope.plotAPI.getFaceX();
-                    var y=  $scope.plotAPI.getFaceY();
-                    var w=  $scope.plotAPI.getFaceWidth();
-                    var h=  $scope.plotAPI.getFaceHeight();
-                    $scope.images[$scope.imageFilename] = {
-                        "face_x": x,
-                        "face_y": y,
-                        "face_width": w,
-                        "face_height": h
-                    };
-                    console.log(x + ", " + y + ", " + w + ", " + h);
-
-                    $scope.imageFilename = null;
-                    $scope.imageCount += 1;
-
-                } else {
-                    // boundaries not drawn, auto detect
-
-                    if ($scope.isBusy) {
-                        $scope.alerts.push({"msg": "Unable to auto detect boundaries while app is busy. Try again later!"});
-                        return;
-                    }
-
-                    $scope.isBusy = true;
-                    $http.post(URL.autodetect, {"filenames": [$scope.imageFilename]}).then(function(response) {
-                        console.log(response);
-                        if (response.data[0].length > 1) {
-                            var modalInstance = $uibModal.open({
-                                animation: true,
-                                backdrop: true,
-                                keyboard: true,
-                                size: 'lg',
-                                component: 'selectModalComponent',
-                                resolve: {
-                                    params: function () {
-                                        return {
-                                            "files": [$scope.uploadImageDir + $scope.imageFilename],
-                                            "data": response.data[0]
-                                        }
-                                    }
-                                }
-                            });
-                            modalInstance.result.then(function (selectedIndices) {
-                                $scope.images[$scope.imageFilename] = {
-                                    "face_x": response.data[0][selectedIndices[0]].face_x,
-                                    "face_y": response.data[0][selectedIndices[0]].face_y,
-                                    "face_width": response.data[0][selectedIndices[0]].face_width,
-                                    "face_height": response.data[0][selectedIndices[0]].face_height
-                                };
-                                $scope.imageFilename = null;
-                                $scope.imageCount += 1;
-                                $scope.isBusy = false;
-                            });
-                        } else {
-                            $scope.images[$scope.imageFilename] = {
-                                "face_x": response.data[0][0].face_x,
-                                "face_y": response.data[0][0].face_y,
-                                "face_width": response.data[0][0].face_width,
-                                "face_height": response.data[0][0].face_height
-                            };
-                            $scope.imageFilename = null;
-                            $scope.imageCount += 1;
-                            $scope.isBusy = false;
-                        }
-
-                    }, function(error) {
-                        $scope.alerts.push({"msg": "Face auto detect failed: " + error.statusText});
-                        $scope.isBusy = false;
-                    });
-                }
-            };
-
             $scope.removeImage = function(path) {
                 delete $scope.images[path];
                 delete $scope.debugData[path];
@@ -256,15 +162,16 @@
                         if (response.data[0].length > 1) {
                             var modalInstance = $uibModal.open({
                                 animation: true,
-                                backdrop: true,
-                                keyboard: true,
+                                backdrop: 'static',
+                                keyboard: false,
                                 size: 'lg',
                                 component: 'selectModalComponent',
                                 resolve: {
                                     params: function () {
                                         return {
-                                            "files": [$scope.uploadImageDir + $scope.imageFilename],
-                                            "data": response.data[0]
+                                            "uploadDir": $scope.uploadImageDir,
+                                            "files": [$scope.imageFilename],
+                                            "data": response.data
                                         }
                                     }
                                 }
@@ -279,15 +186,7 @@
                                 $scope.imageFilename = null;
                                 $scope.editing = false;
                                 $scope.isBusy = false;
-                            }, function () {
-                                // dialog dismissed without selecting
-                                // automatically select the first one
-                                $scope.images[$scope.imageFilename] = {
-                                    "face_x": response.data[0][0].face_x,
-                                    "face_y": response.data[0][0].face_y,
-                                    "face_width": response.data[0][0].face_width,
-                                    "face_height": response.data[0][0].face_height
-                                };
+                            }, function() {
                                 $scope.imageFilename = null;
                                 $scope.editing = false;
                                 $scope.isBusy = false;
@@ -474,8 +373,8 @@
                     if (s_files.length > 0) {
                         var modalInstance = $uibModal.open({
                             animation: true,
-                            backdrop: true,
-                            keyboard: true,
+                            backdrop: 'static',
+                            keyboard: false,
                             size: 'lg',
                             component: 'selectModalComponent',
                             resolve: {
