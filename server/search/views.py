@@ -4,6 +4,8 @@ import json
 import time
 import requests
 import urllib2
+import random
+import string
 
 # temporary, for uploading images to my isi home directory so c server can access them
 # don't need these for deployment
@@ -48,10 +50,10 @@ def upload(request):
     if request.method == 'POST':
         parser_classes = (MultiPartParser, FormParser,)
         image = request.FILES['file']
-        t = time.time()
         # fileDir = os.path.abspath(__file__ + "/../../../images/")
         fileDir = os.path.abspath("/nfs/div2/jchen/face-search/uploads/")
-        filename = str(t)
+        filename = ''.join(random.choice(string.lowercase) for i in range(10))
+        print(filename)
         filepath = os.path.join(fileDir, filename)
         with open(filepath, 'wb+') as temp_file:
             for chunk in image.chunks():
@@ -94,10 +96,9 @@ def upload(request):
 def uploadByLink(request):
     if request.method == 'POST':
         imageURL = request.data.get('imageURL')
-        t = time.time()
         # fileDir = os.path.abspath(__file__ + "/../../../images/")
         fileDir = os.path.abspath("/nfs/div2/jchen/face-search/uploads/")
-        filename = str(t)
+        filename = ''.join(random.choice(string.lowercase) for i in range(10))
         filepath = os.path.join(fileDir, filename)
 
         # save image from url
