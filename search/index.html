@@ -65,7 +65,8 @@
                     <div>
                         <button class="btn btn-primary btn-xs" ng-click="resetImage()" ng-disabled="!plotAPI.isDrawn()">Reset</button>
                         <button class="btn btn-primary btn-xs" ng-click="cancelEdit()">Cancel</button>
-                        <button class="btn btn-primary btn-xs" ng-click="applyEdit()">Apply</button>
+                        <button class="btn btn-primary btn-xs" ng-click="applyEdit()" ng-disabled="!plotAPI.isDrawn()">Apply</button>
+                        <button class="btn btn-primary btn-xs" ng-click="autoDetect()">Auto Detect</button>
                     </div>
 
                 </div>
