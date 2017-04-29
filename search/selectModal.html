@@ -1,16 +1,30 @@
 <div class="modal-body">
-    <div>Select from auto face detection</div>
-        <thumbnail ng-repeat="d in $ctrl.currentData track by $index"
-                   class="thumbnail"
-                   img-src="{{$ctrl.uploadDir}}{{$ctrl.files[$ctrl.currentIndex]}}"
-                   box-x="d.face_x"
-                   box-y="d.face_y"
-                   box-width="d.face_width"
-                   box-height="d.face_height"
-                   crop="true"
-                   display-width=150
-                   display-height=150
-                    ng-click="$ctrl.select($index)"
-                    style="cursor: pointer; position:relative;display: inline-block;">
-        </thumbnail>
+    <div ng-switch="$ctrl.files && $ctrl.files.length > 0">
+        <div ng-switch-when="true">
+            <div>Select from auto face detection</div>
+            <thumbnail ng-repeat="d in $ctrl.currentData track by $index"
+                       class="thumbnail"
+                       img-src="{{$ctrl.uploadDir}}{{$ctrl.files[$ctrl.currentIndex]}}"
+                       box-x="d.face_x"
+                       box-y="d.face_y"
+                       box-width="d.face_width"
+                       box-height="d.face_height"
+                       crop="true"
+                       display-width=150
+                       display-height=150
+                       ng-click="$ctrl.select($index)"
+                       style="cursor: pointer; position:relative;display: inline-block;">
+            </thumbnail>
+        </div>
+        <div ng-switch-when="false">Unable to detect faces</div>
+    </div>
+
+    <div ng-if="$ctrl.manual">
+        <div>Draw boundary manually</div>
+        <plot image-path="{{$ctrl.uploadDir}}{{$ctrl.files[$ctrl.currentIndex]}}" plot-api="$ctrl.plotAPI"></plot>
+        <div>
+            <button class="btn btn-primary btn-xs" ng-click="$ctrl.reset()" ng-disabled="!$ctrl.plotAPI.isDrawn()">Reset</button>
+            <button class="btn btn-primary btn-xs" ng-click="$ctrl.apply()" ng-disabled="!$ctrl.plotAPI.isDrawn()">Apply</button>
+        </div>
+    </div>
 </div>

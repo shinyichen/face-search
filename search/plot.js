@@ -12,10 +12,10 @@
 
                     d3Service.d3().then(function(d3) {
 
-                        var w = element[0].parentElement.clientWidth;
-
-                        var h = element[0].offsetParent.clientHeight - element[0].offsetTop - 40;
-
+                        // var w = element[0].parentElement.clientWidth;
+                        var w = 400;
+                        // var h = element[0].offsetParent.clientHeight - element[0].offsetTop - 40;
+                        var h = 300;
                         var scaledImageW;
 
                         var scaledImageH;
@@ -43,6 +43,9 @@
                                 scale = Math.min(w/width, h/height);
                                 scaledImageW = width * scale;
                                 scaledImageH = height * scale;
+                            } else {
+                                scaledImageW = width;
+                                scaledImageH = height;
                             }
                             var imgs = svg.selectAll("image").data([0]);
                             imgs.enter()

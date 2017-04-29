@@ -21,8 +21,6 @@
 
             $scope.imageCount = 0;
 
-            $scope.imageFilename = null;
-
             $scope.isBusy = false;
 
             $scope.isSearching = false;
@@ -110,51 +108,14 @@
                 }
             };
 
-            $scope.resetImage = function() {
-                $scope.plotAPI.reset();
-            };
-
-            $scope.cancelImage = function() {
-                $scope.imageFilename = null;
-            };
-
             $scope.removeImage = function(path) {
                 delete $scope.images[path];
                 delete $scope.debugData[path];
                 $scope.imageCount -= 1;
             };
 
-            $scope.editImage = function(path) {
-                $scope.imageFilename = path;
-                $scope.editing = true;
-            };
-
-            $scope.applyEdit = function() {
-                var img = $scope.images[$scope.imageFilename];
-                if ($scope.plotAPI.isDrawn()) {
-                    var x = $scope.plotAPI.getFaceX();
-                    var y = $scope.plotAPI.getFaceY();
-                    var w = $scope.plotAPI.getFaceWidth();
-                    var h = $scope.plotAPI.getFaceHeight();
-
-                    img.face_x = x;
-                    img.face_y = y;
-                    img.face_width = w;
-                    img.face_height = h;
-                    console.log(x + ", " + y + ", " + w + ", " + h);
-
-                    // remove debug data
-                    delete $scope.debugData[$scope.imageFilename];
-
-                    $scope.imageFilename = null;
-                    $scope.editing = false;
-
-                }
-
-            };
-
             // in editing, call this to auto detect face boundary
-            $scope.autoDetect = function() {
+            $scope.editImage = function(filename) {
                 // boundaries not drawn, auto detect
                 if ($scope.isBusy) {
                     $scope.alerts.push({"msg": "Unable to auto detect boundaries while app is busy. Try again later!"});
@@ -162,54 +123,41 @@
                 }
 
                 $scope.isBusy = true;
-                $http.post(URL.autodetect, {"filenames": [$scope.imageFilename]}).then(function(response) {
+                $http.post(URL.autodetect, {"filenames": [filename]}).then(function(response) {
                     console.log(response);
-                    if (response.data[0].length > 1) {
-                        var modalInstance = $uibModal.open({
-                            animation: true,
-                            backdrop: 'static',
-                            keyboard: false,
-                            size: 'lg',
-                            component: 'selectModalComponent',
-                            resolve: {
-                                params: function () {
-                                    return {
-                                        "uploadDir": $scope.uploadImageDir,
-                                        "files": [$scope.imageFilename],
-                                        "data": response.data
-                                    }
+                    var modalInstance = $uibModal.open({
+                        animation: true,
+                        backdrop: 'static',
+                        keyboard: false,
+                        size: 'lg',
+                        component: 'selectModalComponent',
+                        resolve: {
+                            params: function () {
+                                return {
+                                    "uploadDir": $scope.uploadImageDir,
+                                    "files": [filename],
+                                    "data": response.data,
+                                    "manual": true
                                 }
                             }
-                        });
-                        modalInstance.result.then(function (selectedIndices) {
-                            $scope.images[$scope.imageFilename] = {
-                                "face_x": response.data[0][selectedIndices[0]].face_x,
-                                "face_y": response.data[0][selectedIndices[0]].face_y,
-                                "face_width": response.data[0][selectedIndices[0]].face_width,
-                                "face_height": response.data[0][selectedIndices[0]].face_height
-                            };
-                            $scope.imageFilename = null;
-                            $scope.editing = false;
-                            $scope.isBusy = false;
-                        }, function() {
-                            $scope.imageFilename = null;
-                            $scope.editing = false;
-                            $scope.isBusy = false;
-                        });
-                    } else {
-                        $scope.images[$scope.imageFilename] = {
-                            "face_x": response.data[0][0].face_x,
-                            "face_y": response.data[0][0].face_y,
-                            "face_width": response.data[0][0].face_width,
-                            "face_height": response.data[0][0].face_height
+                        }
+                    });
+                    modalInstance.result.then(function (selections) {
+                        $scope.images[filename] = {
+                            "face_x": selections[filename].face_x,
+                            "face_y": selections[filename].face_y,
+                            "face_width": selections[filename].face_width,
+                            "face_height": selections[filename].face_height
                         };
-                        $scope.imageFilename = null;
                         $scope.editing = false;
                         $scope.isBusy = false;
-                    }
+                    }, function() {
+                        $scope.editing = false;
+                        $scope.isBusy = false;
+                    });
 
                     // remove debug data
-                    delete $scope.debugData[$scope.imageFilename];
+                    delete $scope.debugData[filename];
 
                 }, function(error) {
                     $scope.alerts.push({"msg": "Face auto detect failed: " + error.statusText});
@@ -218,7 +166,6 @@
             };
 
             $scope.cancelEdit = function() {
-                $scope.imageFilename = null;
                 $scope.editing = false;
             };
 
@@ -385,18 +332,19 @@
                                     return {
                                         "uploadDir": $scope.uploadImageDir,
                                         "files": s_files,
-                                        "data": s_data
+                                        "data": s_data,
+                                        "manual": false
                                     }
                                 }
                             }
                         });
-                        modalInstance.result.then(function (selectedIndices) {
+                        modalInstance.result.then(function (selections) {
                             for (var i = 0; i < s_files.length; i++) {
                                 $scope.images[s_files[i]] = {
-                                    "face_x": s_data[i][selectedIndices[i]].face_x,
-                                    "face_y": s_data[i][selectedIndices[i]].face_y,
-                                    "face_width": s_data[i][selectedIndices[i]].face_width,
-                                    "face_height": s_data[i][selectedIndices[i]].face_height
+                                    "face_x": selections[s_files[i]].face_x,
+                                    "face_y": selections[s_files[i]].face_y,
+                                    "face_width": selections[s_files[i]].face_width,
+                                    "face_height": selections[s_files[i]].face_height
                                 };
                                 $scope.imageCount += 1;
                             }

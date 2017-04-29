@@ -47,23 +47,52 @@
             controller: function () {
                 var $ctrl = this;
 
+                $ctrl.plotAPI = {};
+
                 $ctrl.$onInit = function () {
                     $ctrl.uploadDir = $ctrl.resolve.params.uploadDir;
                     $ctrl.files = $ctrl.resolve.params.files;
                     $ctrl.data = $ctrl.resolve.params.data;
                     $ctrl.currentIndex = 0;
                     $ctrl.currentData = $ctrl.data[0];
+                    $ctrl.manual = $ctrl.resolve.params.manual;
                 };
 
-                var selections = [];
+                var selections = {};
 
                 $ctrl.select = function(i) {
-                    selections[$ctrl.currentIndex] = i;
+                    selections[$ctrl.files[$ctrl.currentIndex]] = {
+                        "face_x": $ctrl.data[$ctrl.currentIndex][i].face_x,
+                        "face_y": $ctrl.data[$ctrl.currentIndex][i].face_y,
+                        "face_width": $ctrl.data[$ctrl.currentIndex][i].face_width,
+                        "face_height": $ctrl.data[$ctrl.currentIndex][i].face_height,
+                    };
                     if ($ctrl.currentIndex == $ctrl.files.length - 1) {
                         $ctrl.ok(selections);
                     } else {
                         $ctrl.currentIndex += 1;
                         $ctrl.currentData = $ctrl.data[$ctrl.currentIndex];
+                    }
+                };
+
+                $ctrl.reset = function() {
+                    $ctrl.plotAPI.reset();
+                };
+
+                $ctrl.apply = function() {
+                    if ($ctrl.plotAPI.isDrawn()) {
+                        selections[$ctrl.files[$ctrl.currentIndex]] = {
+                            "face_x": $ctrl.plotAPI.getFaceX(),
+                            "face_y": $ctrl.plotAPI.getFaceY(),
+                            "face_width": $ctrl.plotAPI.getFaceWidth(),
+                            "face_height": $ctrl.plotAPI.getFaceHeight()
+                        };
+                        if ($ctrl.currentIndex == $ctrl.files.length - 1) {
+                            $ctrl.ok(selections);
+                        } else {
+                            $ctrl.currentIndex += 1;
+                            $ctrl.currentData = $ctrl.data[$ctrl.currentIndex];
+                        }
                     }
                 };
 

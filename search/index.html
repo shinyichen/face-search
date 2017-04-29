@@ -58,18 +58,6 @@
                     </form>
 
                 </div>
-
-                <div class="edit-panel" ng-if="imageFilename" ng-repeat="path in [imageFilename]">
-                    <p><b>Draw bounding box (optional):</b></p>
-                    <plot image-path="{{uploadImageDir}}/{{path}}" plot-api="plotAPI"></plot>
-                    <div>
-                        <button class="btn btn-primary btn-xs" ng-click="resetImage()" ng-disabled="!plotAPI.isDrawn()">Reset</button>
-                        <button class="btn btn-primary btn-xs" ng-click="cancelEdit()">Cancel</button>
-                        <button class="btn btn-primary btn-xs" ng-click="applyEdit()" ng-disabled="!plotAPI.isDrawn()">Apply</button>
-                        <button class="btn btn-primary btn-xs" ng-click="autoDetect()">Auto Detect</button>
-                    </div>
-
-                </div>
             </div>
         </div> <!-- end of left panel -->
 
