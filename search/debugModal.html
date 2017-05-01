@@ -4,13 +4,12 @@
             <thead>
             <tr>
                 <th>YAW</th>
-                <th>Confidence</th>
+                <th>Landmark Confidence</th>
                 <th>Landmark Detection</th>
                 <th>Pose Detection</th>
                 <th>Render</th>
                 <th>Align</th>
                 <th>Feature Extraction</th>
-                <th>Feature Extraction Batch</th>
             </tr>
             </thead>
             <tbody>
@@ -21,8 +20,10 @@
                 <td>{{$ctrl.pose_dur}} ms</td>
                 <td>{{$ctrl.render_dur}} ms</td>
                 <td>{{$ctrl.align_dur}} ms</td>
-                <td>{{$ctrl.featex_dur}} ms</td>
-                <td>{{$ctrl.featex_batch_dur}} ms</td>
+                <td ng-switch="$ctrl.featex_dur == 0">
+                    <span ng-switch-when="false">{{$ctrl.featex_dur}} ms</span>
+                    <span ng-switch-when="true">{{$ctrl.featex_batch_dur}} ms</span>
+                </td>
             </tr>
             </tbody>
         </table>
