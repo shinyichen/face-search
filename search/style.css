@@ -30,6 +30,13 @@
     margin:2px;
 }
 
+.thumbnail-select {
+    width: auto;
+    height: 100px;
+    overflow: auto;
+    margin:2px;
+}
+
 .thumbnail-close {
     position:absolute;
     top:5px;

@@ -55,7 +55,7 @@
                     $ctrl.data = $ctrl.resolve.params.data;
                     $ctrl.currentIndex = 0;
                     $ctrl.currentData = $ctrl.data[0];
-                    $ctrl.manual = $ctrl.resolve.params.manual;
+                    $ctrl.currentImagePath = $ctrl.uploadDir + $ctrl.files[0];
                 };
 
                 var selections = {};
@@ -65,13 +65,14 @@
                         "face_x": $ctrl.data[$ctrl.currentIndex][i].face_x,
                         "face_y": $ctrl.data[$ctrl.currentIndex][i].face_y,
                         "face_width": $ctrl.data[$ctrl.currentIndex][i].face_width,
-                        "face_height": $ctrl.data[$ctrl.currentIndex][i].face_height,
+                        "face_height": $ctrl.data[$ctrl.currentIndex][i].face_height
                     };
                     if ($ctrl.currentIndex == $ctrl.files.length - 1) {
                         $ctrl.ok(selections);
                     } else {
                         $ctrl.currentIndex += 1;
                         $ctrl.currentData = $ctrl.data[$ctrl.currentIndex];
+                        $ctrl.currentImagePath = $ctrl.uploadDir + $ctrl.files[$ctrl.currentIndex];
                     }
                 };
 
@@ -92,6 +93,7 @@
                         } else {
                             $ctrl.currentIndex += 1;
                             $ctrl.currentData = $ctrl.data[$ctrl.currentIndex];
+                            $ctrl.currentImagePath = $ctrl.uploadDir + $ctrl.files[$ctrl.currentIndex];
                         }
                     }
                 };
