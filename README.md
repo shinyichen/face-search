@@ -13,7 +13,7 @@ python manage.py runserver 0.0.0.0:8001
 
 ### Start Janus Service (on isicvl05)
 Go to `/nfs/div2/jchen/janus-dev/janus-api/build` and start Janus service
-`src/cserver/c_example`. Important to stop this service when not running the demo.
+`src/cserver/c_example`. Wait until initialization finishes. (Important to stop this service when not running the demo.)
 
 ### Now the demo is running at http://isicvl03:8000/search/
 
