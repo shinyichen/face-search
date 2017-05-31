@@ -1,6 +1,14 @@
 # face-search
+## Setting up
+Assuming I copied the face-search project to `/nfs/div2/jchen/face-search/`. Inside `/nfs/div2/jchen/face-search/`, I also need to create a link called `gallery` to the images directory, which is at `/lfs2/glaive/data/CS3_2.0/`. 
+~~~
+ln -s /lfs2/glaive/data/CS3_2.0/ gallery
+~~~
+Then create an empty directory called `uploads`.
+~~~
+mkdir uploads
+~~~
 ## Running Demo
-Assuming I copied the project to `/nfs/div2/jchen/face-search/`. Inside `/nfs/div2/jchen/face-search/`, I also need to create a link called `gallery` to the images directory, which is at `/lfs2/glaive/data/CS3_2.0/`.
 ### Start http service and Django (on isicvl03)
 Go to `/nfs/div2/jchen/face-search` and start http server to host static files 
 ~~~~
